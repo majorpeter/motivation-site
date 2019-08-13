@@ -42,5 +42,6 @@ def fetch_cells_from_sheet(sheet_id, range):
     :return: list of cell values as string
     """
     sheet_service = discovery.build('sheets', 'v4', credentials=_fetch_credentials()).spreadsheets()
-    result = sheet_service.values().get(spreadsheetId=sheet_id, range=range).execute()
-    return [cell[0] for cell in result['values']]
+    result = sheet_service.values().get(spreadsheetId=sheet_id, range=range, valueRenderOption='UNFORMATTED_VALUE',
+                                        dateTimeRenderOption='FORMATTED_STRING').execute()
+    return result['values']
