@@ -20,6 +20,7 @@
 					<nav>
 						<ul>
 							<li><a href="#intro">Quote of the day</a></li>
+							<li><a href="#workout">Workout stats</a></li>
 							<li><a href="#one">Who we are</a></li>
 							<li><a href="#two">What we do</a></li>
 							<li><a href="#three">Get in touch</a></li>
@@ -37,6 +38,35 @@
 							{{ quote|safe }}
 						</div>
 					</section>
+
+				<section id="workout" class="wrapper style2 fullscreen fade-up">
+						<div class="inner">
+							<h2>Workout stats</h2>
+							<p><i class="fas {{ days_since_workout_fas_icon }}"></i> {{days_since_workout|safe}}</p>
+							<div class="features">
+								<section>
+									<span class="icon solid major fa-calendar-alt"></span>
+									<h3>Calendar</h3>
+									<table>
+										<thead>
+											<tr>
+												<th>Date</th>
+												<th>Weight</th>
+											</tr>
+										</thead>
+										<tbody>
+										{% for item in workout %}{% if item.workout_day %}
+										<tr>
+											<td>{{ item.date }}</td>
+											<td>{{ item.weight }}</td>
+										</tr>
+										{% endif %}{% endfor %}
+										</tbody>
+									</table>
+								</section>
+							</div>
+						</div>
+				</section>
 
 				<!-- One -->
 					<section id="one" class="wrapper style2 spotlights">
