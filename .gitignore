@@ -4,3 +4,4 @@ token.pickle
 venv/
 config.json
 __pycache__/
+quotes.txt
