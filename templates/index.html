@@ -10,6 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/static/css/main.css" />
+		<link rel="stylesheet" href="/static/css/extra.css" />
 		<noscript><link rel="stylesheet" href="/static/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -47,6 +48,22 @@
 								<section>
 									<span class="icon solid major fa-calendar-alt"></span>
 									<h3>Calendar</h3>
+									<p>{{ workout_cal_header }}</p>
+									<table id="workout-cal"><tbody>
+									{% for row in workout_cal %}
+									<tr>
+										{% for cell in row %}
+										<td class="{% if cell['workout'] %}workout{% endif %}{% if cell['today'] %} today{% endif %}" title="{{ cell['hint'] }}">
+											{{ cell['day'] }}
+										</td>
+										{% endfor %}
+									</tr>
+									{% endfor %}
+									</tbody></table>
+								</section>
+								<section>
+									<span class="icon solid major fa-list-ul"></span>
+									<h3>Workout Days</h3>
 									<table>
 										<thead>
 											<tr>

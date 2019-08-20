@@ -1,0 +1,8 @@
+table#workout-cal td.workout {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+table#workout-cal td.today {
+    background-color: rgba(6, 59, 179, 0.25);
+}

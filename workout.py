@@ -1,3 +1,4 @@
+import calendar
 import json
 import time
 from copy import copy
@@ -72,3 +73,26 @@ def days_since_workout_message_html():
         return 'You have worked out <strong>%d days ago</strong>, maybe it\'s time to hit the gym?' % days, 'fa-exclamation-triangle'
     else:
         return 'You haven\'t worked out in <strong>%d days</strong>! Go training now!' % days, 'fa-exclamation'
+
+
+def workout_calendar():
+    t = time.localtime()
+    cal = calendar.monthcalendar(t.tm_year, t.tm_mon)
+    days = get_workout_days_for_range(days_range=7)
+    result = []
+    for row in cal:
+        rrow = []
+        for cell in row:
+            if cell == 0:
+                rrow.append(None)
+            else:
+                date_str = time.strftime(config['date_format'], (t.tm_year, t.tm_mon, cell, 0, 0, 0, 0, 0, 0))
+                workout_day = [x for x in days if x['date'] == date_str]
+                rrow.append({
+                    'day': cell,
+                    'today': cell == t.tm_mday,
+                    'workout': len(workout_day) != 0 and workout_day[0]['workout_day'],
+                    'hint': '%d workouts in the last week' % workout_day[0]['count'] if len(workout_day) != 0 else 'No data'
+                })
+        result.append(rrow)
+    return 'Your workout days in %d.%02d. so far:' % (t.tm_year, t.tm_mon), result
