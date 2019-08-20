@@ -1,0 +1,46 @@
+<div id="chart-container" style="">
+    <canvas id="workout-chart"></canvas>
+</div>
+<script>
+var color = Chart.helpers.color;
+Chart.defaults.global.defaultFontColor = 'white';
+
+var ctx = document.getElementById('workout-chart').getContext('2d');
+var myChart = new Chart.Line(ctx, {
+    data: {
+        labels: {{ workout_dates | tojson }},
+        datasets: [{
+            label: 'Workouts Per Week',
+            data: {{ workouts_per_week | tojson }},
+            yAxisID: 'perweekAxis',
+        },{
+            label: 'Weight',
+            data: {{ weight_measurements | tojson }},
+            yAxisID: 'weightAxis',
+            borderColor: '#b74e91',
+            backgroundColor: color('#b74e91').alpha(0.5).rgbString(),
+            spanGaps: true,
+            fill: false,
+            pointRadius: 6,
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                type: 'linear',
+                ticks: {
+                    beginAtZero: true
+                },
+                id: 'perweekAxis',
+            }, {
+                type: 'linear',
+                position: 'right',
+                id: 'weightAxis',
+            }]
+        },
+        legend: {
+            position: 'bottom',
+        }
+    }
+});
+</script>

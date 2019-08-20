@@ -11,7 +11,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/static/css/main.css" />
 		<link rel="stylesheet" href="/static/css/extra.css" />
+		<link rel="stylesheet" href="/static/css/Chart.min.css" />
 		<noscript><link rel="stylesheet" href="/static/css/noscript.css" /></noscript>
+		<script src="/static/js/Chart.min.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -44,6 +46,16 @@
 						<div class="inner">
 							<h2>Workout stats</h2>
 							<p><i class="fas {{ days_since_workout_fas_icon }}"></i> {{days_since_workout|safe}}</p>
+
+							<div class="features">
+								<section class="chart-container">
+									<span class="icon solid major fa-code"></span>
+									<h3>Statistics</h3>
+									{% include 'workout_chart.html' %}
+								</section>
+							</div>
+
+
 							<div class="features">
 								<section>
 									<span class="icon solid major fa-calendar-alt"></span>
@@ -246,6 +258,5 @@
 			<script src="/static/js/breakpoints.min.js"></script>
 			<script src="/static/js/util.js"></script>
 			<script src="/static/js/main.js"></script>
-
 	</body>
 </html>
