@@ -1,11 +1,11 @@
 <div id="chart-container" style="">
-    <canvas id="workout-chart"></canvas>
+    <canvas id="workout-chart-canvas"></canvas>
 </div>
 <script>
 var color = Chart.helpers.color;
 Chart.defaults.global.defaultFontColor = 'white';
 
-var ctx = document.getElementById('workout-chart').getContext('2d');
+var ctx = document.getElementById('workout-chart-canvas').getContext('2d');
 var myChart = new Chart.Line(ctx, {
     data: {
         labels: {{ workout_dates | tojson }},
