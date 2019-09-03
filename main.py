@@ -29,7 +29,7 @@ def index_page():
         'workout_dates': workout_dates,
         'workouts_per_week': workouts_per_week,
         'weight_measurements': weight_measurements,
-        'workout': workout_days_data,
+        'workout': workout_days_data[:10],
     }
     return render_template('index.html', **data)
 
