@@ -23,6 +23,7 @@
 					<nav>
 						<ul>
 							<li><a href="#intro">Quote of the day</a></li>
+							<li><a href="#agenda">Agenda</a></li>
 							<li><a href="#workout-chart">Workout Chart</a></li>
 							<li><a href="#workout-stats">Workout Stats</a></li>
 						</ul>
@@ -39,6 +40,21 @@
 							{{ quote|safe }}
 						</div>
 					</section>
+
+				<section id="agenda" class="wrapper style1 fullscreen fade-up">
+					<div class="inner">
+						<h2>Agenda</h2>
+						{% if agenda|length == 0 %}
+						<p>No upcoming events!</p>
+						{% else %}
+						{% for item in agenda %}
+						<p>{% if item.is_today %}<strong>{% endif %}
+							<a href="{{ item.url }}" title="{{ item.time|e }}">{{ item.title }}</a>
+						{% if item.is_today %}</strong>{% endif %}</p>
+						{% endfor %}
+						{% endif %}
+					</div>
+				</section>
 
 				<section id="workout-chart" class="wrapper style2 fullscreen fade-up">
 						<div class="inner">

@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 
+import agenda
 import quotes
 import workout
 
@@ -22,6 +23,7 @@ def index_page():
 
     data = {
         'quote': quotes.get_random_quote()[:-1].replace('\n', '<br/>'),
+        'agenda': agenda.get_agenda(),
         'days_since_workout': days_since_workout_message,
         'days_since_workout_fas_icon': days_since_workout_icon,
         'workout_cal_header': workout_cal_header,

@@ -61,9 +61,11 @@ def fetch_calendar_events(max_items=10):
                                  orderBy='startTime').execute()
     result = []
     for item in events['items']:
+        event_time = datetime.datetime.fromisoformat(item['start']['dateTime'])
         result.append({
             'title': item['summary'],
-            'time': datetime.datetime.fromisoformat(item['start']['dateTime']),
-            'url': item['htmlLink']
+            'time': event_time,
+            'url': item['htmlLink'],
+            'is_today': datetime.datetime.today().date() == event_time.date()
         })
     return result
