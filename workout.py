@@ -4,7 +4,7 @@ import time
 from copy import copy
 from threading import Lock
 
-import spreadsheet
+import google_account
 
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -19,7 +19,7 @@ def _get_entries():
     global _entries_fetch_time, _entries
     with _entries_lock:
         if _entries_fetch_time is None or time.mktime(time.localtime()) - time.mktime(_entries_fetch_time) > 1000:
-            _entries = spreadsheet.fetch_cells_from_sheet(config['workout_days_sheet_id'], config['workout_days_sheet_range'])
+            _entries = google_account.fetch_cells_from_sheet(config['workout_days_sheet_id'], config['workout_days_sheet_range'])
             _entries_fetch_time = time.localtime()
         return copy(_entries)
 

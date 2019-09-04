@@ -1,12 +1,14 @@
+import datetime
 import os
 import pickle
+from pprint import pprint
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient import discovery
 
 
-_SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+_SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
 
 
 def _fetch_credentials():
@@ -45,3 +47,23 @@ def fetch_cells_from_sheet(sheet_id, range):
     result = sheet_service.values().get(spreadsheetId=sheet_id, range=range, valueRenderOption='UNFORMATTED_VALUE',
                                         dateTimeRenderOption='FORMATTED_STRING').execute()
     return result['values']
+
+
+def fetch_calendar_events(max_items=10):
+    """
+    download next events from calendar
+    :param max_items: number of items to download
+    :return: list of dicts (see below)
+    """
+    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+    events_service = discovery.build('calendar', 'v3', credentials=_fetch_credentials()).events()
+    events = events_service.list(calendarId='primary', timeMin=now, maxResults=max_items, singleEvents=True,
+                                 orderBy='startTime').execute()
+    result = []
+    for item in events['items']:
+        result.append({
+            'title': item['summary'],
+            'time': datetime.datetime.fromisoformat(item['start']['dateTime']),
+            'url': item['htmlLink']
+        })
+    return result
