@@ -47,10 +47,13 @@
 						{% if agenda|length == 0 %}
 						<p>No upcoming events!</p>
 						{% else %}
-						{% for item in agenda %}
+						{% for class, items in agenda.items() %}
+						<h3>{{ class.to_string() }}</h3>
+						{% for item in items %}
 						<p>{% if item.is_today %}<strong>{% endif %}
 							<a href="{{ item.url }}" title="{{ item.time|e }}">{{ item.title }}</a>
 						{% if item.is_today %}</strong>{% endif %}</p>
+						{% endfor %}
 						{% endfor %}
 						{% endif %}
 					</div>

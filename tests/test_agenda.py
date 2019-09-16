@@ -5,7 +5,9 @@ from agenda import classify_datetime, DateClass
 
 def test_datetime_classify():
     today = datetime(year=2012, month=12, day=3)
+    today_but_later = datetime(year=2012, month=12, day=3, hour=22, minute=25)
     tomorrow = datetime(year=2012, month=12, day=4)
+    tomorrow_but_later = datetime(year=2012, month=12, day=4, hour=22, minute=25)
     sunday = datetime(year=2012, month=12, day=9)
     next_monday = datetime(year=2012, month=12, day=10)
     next_sunday = datetime(year=2012, month=12, day=16)
@@ -15,7 +17,9 @@ def test_datetime_classify():
     later_date = datetime(year=2013, month=2, day=10)
 
     assert classify_datetime(today, today) == DateClass.TODAY
+    assert classify_datetime(today_but_later, today) == DateClass.TODAY
     assert classify_datetime(tomorrow, today) == DateClass.TOMORROW
+    assert classify_datetime(tomorrow_but_later, today) == DateClass.TOMORROW
     assert classify_datetime(sunday, today) == DateClass.THIS_WEEK
     assert classify_datetime(next_monday, today) == DateClass.NEXT_WEEK
     assert classify_datetime(next_sunday, today) == DateClass.NEXT_WEEK
