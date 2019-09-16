@@ -51,7 +51,7 @@
 						<h3>{{ class.to_string() }}</h3>
 						{% for item in items %}
 						<p>{% if item.is_today %}<strong>{% endif %}
-							<a href="{{ item.url }}" title="{{ item.time|e }}">{{ item.title }}</a>
+							<a href="{{ item.url }}" title="{{ item.time|e }}" target="_blank">{{ item.title }}</a>
 						{% if item.is_today %}</strong>{% endif %}</p>
 						{% endfor %}
 						{% endfor %}
