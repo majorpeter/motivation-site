@@ -1,0 +1,14 @@
+<section id="agenda" class="wrapper style1 fullscreen fade-up">
+    <div class="inner">
+        <h2>Agenda</h2>
+        {% if agenda|length == 0 %}
+        <p>No upcoming events!</p>
+        {% else %}
+        {% for item in agenda %}
+        <p>{% if item.is_today %}<strong>{% endif %}
+            <a href="{{ item.url }}" title="{{ item.time|e }}">{{ item.title }}</a>
+        {% if item.is_today %}</strong>{% endif %}</p>
+        {% endfor %}
+        {% endif %}
+    </div>
+</section>

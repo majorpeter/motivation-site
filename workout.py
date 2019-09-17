@@ -4,6 +4,8 @@ import time
 from copy import copy
 from threading import Lock
 
+from flask import render_template
+
 import google_account
 
 with open('config.json', 'r') as f:
@@ -75,7 +77,7 @@ def days_since_workout_message_html():
         return 'You haven\'t worked out in <strong>%d days</strong>! Go training now!' % days, 'fa-exclamation'
 
 
-def workout_calendar():
+def workout_calendar_data():
     t = time.localtime()
     cal = calendar.monthcalendar(t.tm_year, t.tm_mon)
     days = get_workout_days_for_range(days_range=7)
@@ -96,3 +98,33 @@ def workout_calendar():
                 })
         result.append(rrow)
     return 'Your workout days in %d.%02d. so far:' % (t.tm_year, t.tm_mon), result
+
+
+def workout_chart():
+    days_since_workout_message, days_since_workout_icon = days_since_workout_message_html()
+    workout_days_data = get_workout_days_for_range()
+
+    workout_dates = [x['date'] for x in workout_days_data]
+    weight_measurements = [x['weight'] if 'weight' in x else None for x in workout_days_data]
+    workouts_per_week = [x['count'] for x in workout_days_data]
+
+    workout_dates.reverse()
+    weight_measurements.reverse()
+    workouts_per_week.reverse()
+
+    return render_template('workout_chart.html',
+                           days_since_workout=days_since_workout_message,
+                           days_since_workout_fas_icon=days_since_workout_icon,
+                           workout_dates=workout_dates,
+                           workouts_per_week=workouts_per_week,
+                           weight_measurements=weight_measurements)
+
+
+def workout_calendar():
+    workout_cal_header, workout_cal = workout_calendar_data()
+    workout_days_data = get_workout_days_for_range()
+
+    return render_template('workout_calendar.html',
+                           workout_cal_header=workout_cal_header,
+                           workout_cal=workout_cal,
+                           workout=workout_days_data[:10])

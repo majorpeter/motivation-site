@@ -1,5 +1,7 @@
 import os
-from random import random, randint
+from random import randint
+
+from flask import render_template
 
 
 def read_quotes_db():
@@ -27,3 +29,7 @@ def read_quotes_db():
 def get_random_quote():
     quotes = read_quotes_db()
     return quotes[randint(0, len(quotes) -1)]
+
+
+def quote():
+    return render_template('quote.html', quote=get_random_quote()[:-1].replace('\n', '<br/>'))

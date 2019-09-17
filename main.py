@@ -9,31 +9,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def index_page():
-    days_since_workout_message, days_since_workout_icon = workout.days_since_workout_message_html()
-    workout_cal_header, workout_cal = workout.workout_calendar()
-    workout_days_data = workout.get_workout_days_for_range()
+    data = ''
+    data += quotes.quote()
+    data += agenda.agenda()
+    data += workout.workout_chart()
+    data += workout.workout_calendar()
 
-    workout_dates = [x['date'] for x in workout_days_data]
-    weight_measurements = [x['weight'] if 'weight' in x else None for x in workout_days_data]
-    workouts_per_week = [x['count'] for x in workout_days_data]
-
-    workout_dates.reverse()
-    weight_measurements.reverse()
-    workouts_per_week.reverse()
-
-    data = {
-        'quote': quotes.get_random_quote()[:-1].replace('\n', '<br/>'),
-        'agenda': agenda.get_agenda(),
-        'days_since_workout': days_since_workout_message,
-        'days_since_workout_fas_icon': days_since_workout_icon,
-        'workout_cal_header': workout_cal_header,
-        'workout_cal': workout_cal,
-        'workout_dates': workout_dates,
-        'workouts_per_week': workouts_per_week,
-        'weight_measurements': weight_measurements,
-        'workout': workout_days_data[:10],
-    }
-    return render_template('index.html', **data)
+    return render_template('index.html',
+                           sections_data=data)
 
 
 @app.route('/generic')

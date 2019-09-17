@@ -2,6 +2,8 @@ import time
 from copy import copy
 from threading import Lock
 
+from flask import render_template
+
 import google_account
 
 _entries_lock = Lock()
@@ -16,3 +18,7 @@ def get_agenda(max_items=10):
             _entries = google_account.fetch_calendar_events(max_items=max_items)
             _entries_fetch_time = time.localtime()
         return copy(_entries)
+
+
+def agenda():
+    return render_template('agenda.html', agenda=get_agenda())
