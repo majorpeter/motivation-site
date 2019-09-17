@@ -1,7 +1,7 @@
 import datetime
 import os
 import pickle
-from pprint import pprint
+from typing import List, NamedTuple
 
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -9,6 +9,12 @@ from googleapiclient import discovery
 
 
 _SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
+
+
+class CalendarEvent(NamedTuple):
+    title: str
+    time: datetime.datetime
+    url: str
 
 
 def _fetch_credentials():
@@ -49,7 +55,7 @@ def fetch_cells_from_sheet(sheet_id, range):
     return result['values']
 
 
-def fetch_calendar_events(max_items=10):
+def fetch_calendar_events(max_items: int = 10) -> List[CalendarEvent]:
     """
     download next events from calendar
     :param max_items: number of items to download
@@ -62,10 +68,9 @@ def fetch_calendar_events(max_items=10):
     result = []
     for item in events['items']:
         event_time = datetime.datetime.fromisoformat(item['start']['dateTime'])
-        result.append({
-            'title': item['summary'],
-            'time': event_time,
-            'url': item['htmlLink'],
-            'is_today': datetime.datetime.today().date() == event_time.date()
-        })
+        result.append(CalendarEvent(
+            title=item['summary'],
+            time=event_time,
+            url=item['htmlLink']
+        ))
     return result

@@ -7,9 +7,9 @@
         {% for class, items in agenda.items() %}
         <h3>{{ class.to_string() }}</h3>
         {% for item in items %}
-        <p>{% if item.is_today %}<strong>{% endif %}
+        <p>{% if class.name == 'TODAY' %}<strong>{% endif %}
             <a href="{{ item.url }}" title="{{ item.time|e }}" target="_blank">{{ item.title }}</a>
-        {% if item.is_today %}</strong>{% endif %}</p>
+        {% if class.name == 'TODAY' %}</strong>{% endif %}</p>
         {% endfor %}
         {% endfor %}
         {% endif %}

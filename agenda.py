@@ -4,10 +4,12 @@ from copy import copy
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 from threading import Lock
+from typing import List, Dict
 
 from flask import render_template
 
 import google_account
+from google_account import CalendarEvent
 
 _entries_lock = Lock()
 _entries = None
@@ -15,17 +17,7 @@ _entries_fetch_time = None
 
 _weekdays = ['Monday, Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 _months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-            'November', 'December']
-
-
-def get_agenda(max_items=10):
-    global _entries_fetch_time, _entries
-    with _entries_lock:
-        if _entries_fetch_time is None or time.mktime(time.localtime()) - time.mktime(_entries_fetch_time) > 600:
-            calendar_entries = google_account.fetch_calendar_events(max_items=max_items)
-            _entries = sort_calendar_entries(calendar_entries)
-            _entries_fetch_time = time.localtime()
-        return copy(_entries)
+           'November', 'December']
 
 
 class DateClass(Enum):
@@ -38,7 +30,7 @@ class DateClass(Enum):
     NEXT_MONTH = 6
     LATER = 7
 
-    def to_string(self, today=datetime.today()):
+    def to_string(self, today: datetime = datetime.today()) -> str:
         if self == DateClass.PAST:
             return 'Past'
         if self == DateClass.TODAY:
@@ -57,7 +49,17 @@ class DateClass(Enum):
         return 'Later'
 
 
-def classify_datetime(date, today=datetime.today()):
+def get_agenda(max_items=10) -> Dict[DateClass, List[CalendarEvent]]:
+    global _entries_fetch_time, _entries
+    with _entries_lock:
+        if _entries_fetch_time is None or time.mktime(time.localtime()) - time.mktime(_entries_fetch_time) > 600:
+            calendar_entries = google_account.fetch_calendar_events(max_items=max_items)
+            _entries = sort_calendar_entries(calendar_entries)
+            _entries_fetch_time = time.localtime()
+        return copy(_entries)
+
+
+def classify_datetime(date: datetime, today: datetime = datetime.today()) -> DateClass:
     """
     classifies input date into a DateClass value
     :param date: datetime to classify
@@ -98,11 +100,11 @@ def classify_datetime(date, today=datetime.today()):
     return DateClass.LATER
 
 
-def sort_calendar_entries(entries):
+def sort_calendar_entries(entries: List[CalendarEvent]) -> Dict[DateClass, List[CalendarEvent]]:
     result = defaultdict(list)
     today = datetime.utcfromtimestamp(time.time())
     for entry in entries:
-        result[classify_datetime(entry['time'].replace(tzinfo=None), today)].append(entry)
+        result[classify_datetime(entry.time.replace(tzinfo=None), today)].append(entry)
     return result
 
 
