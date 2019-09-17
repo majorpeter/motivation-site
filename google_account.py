@@ -16,6 +16,14 @@ class CalendarEvent(NamedTuple):
     time: datetime.datetime
     url: str
 
+    @property
+    def day_in_month(self) -> int:
+        return self.time.day
+
+    @property
+    def day_name_short(self) -> str:
+        return self.time.strftime('%a')
+
 
 def _fetch_credentials():
     """
