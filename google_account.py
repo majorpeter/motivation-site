@@ -75,7 +75,11 @@ def fetch_calendar_events(max_items: int = 10) -> List[CalendarEvent]:
                                  orderBy='startTime').execute()
     result = []
     for item in events['items']:
-        event_time = datetime.datetime.fromisoformat(item['start']['dateTime'])
+        if 'dateTime' in item['start']:
+            event_time = datetime.datetime.fromisoformat(item['start']['dateTime'])
+        else:
+            event_time = datetime.datetime.fromisoformat(item['start']['date'])
+
         result.append(CalendarEvent(
             title=item['summary'],
             time=event_time,
