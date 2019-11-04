@@ -15,7 +15,7 @@ _entries_lock = Lock()
 _entries = None
 _entries_fetch_time = None
 
-_weekdays = ['Monday, Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+_weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 _months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
            'November', 'December']
 
@@ -30,21 +30,24 @@ class DateClass(Enum):
     NEXT_MONTH = 6
     LATER = 7
 
-    def to_string(self, today: datetime = datetime.today()) -> str:
+    def to_string(self, today: time.struct_time = None) -> str:
+        if today is None:
+            today = time.localtime()
+
         if self == DateClass.PAST:
             return 'Past'
         if self == DateClass.TODAY:
             return 'Today'
         if self == DateClass.TOMORROW:
-            return 'Tomorrow (%s)' % _weekdays[(today.weekday() + 1) % 7]
+            return 'Tomorrow (%s)' % _weekdays[(today.tm_wday + 1) % 7]
         if self == DateClass.THIS_WEEK:
             return 'This week'
         if self == DateClass.NEXT_WEEK:
             return 'Next week'
         if self == DateClass.THIS_MONTH:
-            return 'This month (%s)' % _months[today.month - 1]
+            return 'This month (%s)' % _months[today.tm_mon - 1]
         if self == DateClass.NEXT_MONTH:
-            return 'Next month (%s)' % _months[(today.month - 1 + 1) % 12]
+            return 'Next month (%s)' % _months[(today.tm_mon - 1 + 1) % 12]
 
         return 'Later'
 
@@ -59,13 +62,14 @@ def get_agenda(max_items=10) -> Dict[DateClass, List[CalendarEvent]]:
         return copy(_entries)
 
 
-def classify_datetime(date: datetime, today: datetime = datetime.today()) -> DateClass:
+def classify_datetime(date: datetime, today: datetime) -> DateClass:
     """
     classifies input date into a DateClass value
     :param date: datetime to classify
     :param today: current day
     :return: DateClass instance
     """
+
     if today > date:
         return DateClass.PAST # just in case
 
@@ -84,16 +88,16 @@ def classify_datetime(date: datetime, today: datetime = datetime.today()) -> Dat
         return DateClass.NEXT_WEEK
 
     if today.month < 12:
-        first_of_next_month = datetime(year=today.year, month=today.month + 1, day=1)
+        first_of_next_month = datetime(year=today.year, month=today.month + 1, day=1, tzinfo=today.tzinfo)
     else:
-        first_of_next_month = datetime(year=today.year + 1, month=1, day=1)
+        first_of_next_month = datetime(year=today.year + 1, month=1, day=1, tzinfo=today.tzinfo)
     if date < first_of_next_month:
         return DateClass.THIS_MONTH
 
     if first_of_next_month.month < 12:
-        first_of_next_next_month = datetime(year=first_of_next_month.year, month=first_of_next_month.month + 1, day=1)
+        first_of_next_next_month = datetime(year=first_of_next_month.year, month=first_of_next_month.month + 1, day=1, tzinfo=today.tzinfo)
     else:
-        first_of_next_next_month = datetime(year=first_of_next_month.year + 1, month=1, day=1)
+        first_of_next_next_month = datetime(year=first_of_next_month.year + 1, month=1, day=1, tzinfo=today.tzinfo)
     if date < first_of_next_next_month:
         return DateClass.NEXT_MONTH
 
@@ -102,9 +106,10 @@ def classify_datetime(date: datetime, today: datetime = datetime.today()) -> Dat
 
 def sort_calendar_entries(entries: List[CalendarEvent]) -> Dict[DateClass, List[CalendarEvent]]:
     result = defaultdict(list)
-    today = datetime.utcfromtimestamp(time.time())
     for entry in entries:
-        result[classify_datetime(entry.time.replace(tzinfo=None), today)].append(entry)
+        now = datetime.now(tz=entry.time.tzinfo)
+        today = datetime(year=now.year, month=now.month, day=now.day, tzinfo=now.tzinfo)
+        result[classify_datetime(entry.time, today)].append(entry)
     return result
 
 
