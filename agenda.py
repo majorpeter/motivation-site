@@ -113,5 +113,9 @@ def sort_calendar_entries(entries: List[CalendarEvent]) -> Dict[DateClass, List[
     return result
 
 
+def agenda_lazy_load():
+    return render_template('agenda.html')
+
+
 def agenda():
-    return render_template('agenda.html', agenda=get_agenda())
+    return render_template('agenda_content.html', agenda=get_agenda())

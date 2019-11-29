@@ -1,0 +1,18 @@
+{% if agenda|length == 0 %}
+<p>No upcoming events!</p>
+{% else %}
+{% for class, items in agenda.items() %}
+<h4>{{ class.to_string() }}</h4>
+{% for item in items %}
+<div class="item" title="{{ item.time|e }}">
+    <div class="date">
+        <strong>{{ item.day_in_month }}</strong><br/>
+        {{ item.day_name_short }}
+    </div>
+    {% if class.name == 'TODAY' %}<strong>{% endif %}
+    <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+    {% if class.name == 'TODAY' %}</strong>{% endif %}
+</div>
+{% endfor %}
+{% endfor %}
+{% endif %}

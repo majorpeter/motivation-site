@@ -100,7 +100,15 @@ def workout_calendar_data():
     return 'Your workout days in %d.%02d. so far:' % (t.tm_year, t.tm_mon), result
 
 
-def workout_chart():
+def chart_lazy_load():
+    return render_template('workout_chart.html')
+
+
+def calendar_lazy_load():
+    return render_template('workout_calendar.html')
+
+
+def chart_content():
     days_since_workout_message, days_since_workout_icon = days_since_workout_message_html()
     workout_days_data = get_workout_days_for_range()
 
@@ -112,7 +120,7 @@ def workout_chart():
     weight_measurements.reverse()
     workouts_per_week.reverse()
 
-    return render_template('workout_chart.html',
+    return render_template('workout_chart_content.html',
                            days_since_workout=days_since_workout_message,
                            days_since_workout_fas_icon=days_since_workout_icon,
                            workout_dates=workout_dates,
@@ -120,11 +128,11 @@ def workout_chart():
                            weight_measurements=weight_measurements)
 
 
-def workout_calendar():
+def calendar_content():
     workout_cal_header, workout_cal = workout_calendar_data()
     workout_days_data = get_workout_days_for_range()
 
-    return render_template('workout_calendar.html',
+    return render_template('workout_calendar_content.html',
                            workout_cal_header=workout_cal_header,
                            workout_cal=workout_cal,
                            workout=workout_days_data[:10])
