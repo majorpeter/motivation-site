@@ -9,18 +9,31 @@ app = Flask(__name__)
 with open('config.yaml', 'r') as f:
     config = yaml.full_load(f)
 
-_workout = Workout(config['workout'])
+_workout = None
+if 'workout' in config:
+    _workout = Workout(config['workout'])
 
 
 @app.route('/')
 def index_page():
     data = ''
+    navigation = []
+
     data += quotes.quote()
+    navigation.append(('intro', 'Quote of the day'))
+
     data += agenda.agenda_lazy_load()
-    data += Workout.chart_lazy_load()
-    data += Workout.calendar_lazy_load()
+    navigation.append(('agenda', 'Agenda'))
+
+    if _workout is not None:
+        data += Workout.chart_lazy_load()
+        navigation.append(('workout-chart', 'Workout Chart'))
+
+        data += Workout.calendar_lazy_load()
+        navigation.append(('workout-stats', 'Workout Stats'))
 
     return render_template('index.html',
+                           navigation=navigation,
                            sections_data=data)
 
 

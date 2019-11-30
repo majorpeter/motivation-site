@@ -22,10 +22,9 @@
 				<div class="inner">
 					<nav>
 						<ul>
-							<li><a href="#intro">Quote of the day</a></li>
-							<li><a href="#agenda">Agenda</a></li>
-							<li><a href="#workout-chart">Workout Chart</a></li>
-							<li><a href="#workout-stats">Workout Stats</a></li>
+							{% for item in navigation %}
+							<li><a href="#{{ item[0] }}">{{ item[1] }}</a></li>
+							{% endfor %}
 						</ul>
 					</nav>
 				</div>
