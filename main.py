@@ -1,10 +1,15 @@
+import yaml
 from flask import Flask, render_template
 
 import agenda
 import quotes
-import workout
+from workout import Workout
 
 app = Flask(__name__)
+with open('config.yaml', 'r') as f:
+    config = yaml.full_load(f)
+
+_workout = Workout(config['workout'])
 
 
 @app.route('/')
@@ -12,8 +17,8 @@ def index_page():
     data = ''
     data += quotes.quote()
     data += agenda.agenda_lazy_load()
-    data += workout.chart_lazy_load()
-    data += workout.calendar_lazy_load()
+    data += Workout.chart_lazy_load()
+    data += Workout.calendar_lazy_load()
 
     return render_template('index.html',
                            sections_data=data)
@@ -26,12 +31,12 @@ def agenda_get():
 
 @app.route('/workout-chart')
 def workout_chart_get():
-    return workout.chart_content()
+    return _workout.chart_content()
 
 
 @app.route('/workout-calendar')
 def workout_calendar_get():
-    return workout.calendar_content()
+    return _workout.calendar_content()
 
 
 @app.route('/generic')
