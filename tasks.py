@@ -29,6 +29,18 @@ class Tasks:
         return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
+    def get_in_progress_list_html(self):
+        issues = []
+        if 'in_progress_id' in self._config:
+            issue_state = self._redmine.issue_status.get(self._config['in_progress_id'])
+            for issue in issue_state.issues:
+                issues.append({
+                    'subject': issue.subject,
+                    'url': self._config['url'] + 'issues/' + str(issue.id),
+                    'done_ratio': issue.done_ratio
+                })
+        return render_template('tasks_in_progress.html', issues=issues)
+
     @staticmethod
     def chart_open_closed_lazyload():
         return render_template('tasks_open_closed.html', id=Tasks.OPEN_CLOSED_ID)

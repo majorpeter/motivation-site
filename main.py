@@ -65,6 +65,11 @@ def tasks_open_closed_get():
     return _tasks.chart_open_closed()
 
 
+@app.route('/tasks-in-progress')
+def tasks_in_progress():
+    return _tasks.get_in_progress_list_html()
+
+
 @app.route('/generic')
 def generic():
     return render_template('generic.html')

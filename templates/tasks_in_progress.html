@@ -1,0 +1,12 @@
+{% if issues %}
+<ul>
+{% for i in issues %}
+    <li><a href="{{ i.url }}" target="_blank">{{ i.subject }}</a>{% if i.done_ratio %}<sub>({{ i.done_ratio }}%)</sub>{% endif %}
+    </li>
+{% endfor %}
+</ul>
+{% else %}
+<strong><em>
+    No issues found in progress.
+</em></strong>
+{% endif %}
