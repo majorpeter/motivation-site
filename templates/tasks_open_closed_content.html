@@ -18,6 +18,7 @@ var myPieChart = new Chart(ctx, {
         datasets: [{
             data: {{ counts | tojson }},
             urls: {{ urls | tojson }},
+            backgroundColor: {{ backgrounds | tojson }}
         }],
         labels: {{ names | tojson }},
     },
