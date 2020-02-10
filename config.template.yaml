@@ -1,0 +1,13 @@
+workout:
+  sheet_id:  "" # from google spreadsheet URL (part between https://docs.google.com/spreadsheets/d/ and /edit#gid=...)
+  sheet_range:  "A2:B"
+  date_format: "%Y.%m.%d."
+
+redmine:
+  url: 'https://example.com/'
+  api_key: '' # enable REST API and copy key from user account page
+  issue_state_colors:
+    1: '#839fd4ad'
+    2: '#ffbf00c2'
+    5: '#00ce25ad'
+    6: '#00901aad'
