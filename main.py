@@ -3,6 +3,7 @@ from flask import Flask, render_template
 
 import agenda
 import quotes
+from tasks import Tasks
 from workout import Workout
 
 app = Flask(__name__)
@@ -12,6 +13,9 @@ with open('config.yaml', 'r') as f:
 _workout = None
 if 'workout' in config:
     _workout = Workout(config['workout'])
+_tasks = None
+if 'redmine' in config:
+    _tasks = Tasks(config['redmine'])
 
 
 @app.route('/')
@@ -32,6 +36,10 @@ def index_page():
         data += Workout.calendar_lazy_load()
         navigation.append(('workout-stats', 'Workout Stats'))
 
+    if _tasks is not None:
+        data += Tasks.chart_open_closed_lazyload()
+        navigation.append((Tasks.OPEN_CLOSED_ID, 'Tasks Open/Closed'))
+
     return render_template('index.html',
                            navigation=navigation,
                            sections_data=data)
@@ -50,6 +58,11 @@ def workout_chart_get():
 @app.route('/workout-calendar')
 def workout_calendar_get():
     return _workout.calendar_content()
+
+
+@app.route('/tasks-open-closed')
+def tasks_open_closed_get():
+    return _tasks.chart_open_closed()
 
 
 @app.route('/generic')

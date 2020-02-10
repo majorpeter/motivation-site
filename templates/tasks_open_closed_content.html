@@ -1,0 +1,27 @@
+<div class="features">
+    <section class="chart-container">
+        <span class="icon solid major fa-code"></span>
+        <div id="tasks-chart-container" style="">
+            <canvas id="tasks-open-closed-chart-canvas"></canvas>
+        </div>
+    </section>
+</div>
+
+<script>
+var color = Chart.helpers.color;
+Chart.defaults.global.defaultFontColor = 'white';
+
+var ctx = document.getElementById('tasks-open-closed-chart-canvas').getContext('2d');
+var myPieChart = new Chart(ctx, {
+    type: 'pie',
+        data: {
+        datasets: [{
+            data: {{ counts | tojson }}
+        }],
+        labels: {{ names | tojson }},
+    },
+    options: {
+        responsive: true
+    }
+});
+</script>
