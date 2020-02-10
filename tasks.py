@@ -24,7 +24,9 @@ class Tasks:
                 counts.append(len(state.issues))
                 urls.append(self.issue_by_state_listing_url(state.id))
                 backgrounds.append(self._get_background_color_for_issue_state(state.id))
-        return render_template('tasks_open_closed_content.html', names=names, counts=counts, urls=urls,
+        total_count = sum(counts)
+        message = '<strong>%d</strong> issues in total.' % total_count
+        return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
     @staticmethod
