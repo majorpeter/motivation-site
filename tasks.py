@@ -18,14 +18,18 @@ class Tasks:
         counts = []
         urls = []
         backgrounds = []
+        closed_count = 0
+
         for state in states:
             if len(state.issues) > 0:
                 names.append(state.name)
                 counts.append(len(state.issues))
                 urls.append(self.issue_by_state_listing_url(state.id))
                 backgrounds.append(self._get_background_color_for_issue_state(state.id))
+            if state.is_closed:
+                closed_count += len(state.issues)
         total_count = sum(counts)
-        message = '<strong>%d</strong> issues in total.' % total_count
+        message = '<strong>%d/%d</strong> issues are closed.' % (closed_count, total_count)
         return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
