@@ -16,12 +16,29 @@ var myPieChart = new Chart(ctx, {
     type: 'pie',
         data: {
         datasets: [{
-            data: {{ counts | tojson }}
+            data: {{ counts | tojson }},
+            urls: {{ urls | tojson }},
         }],
         labels: {{ names | tojson }},
     },
     options: {
-        responsive: true
+        responsive: true,
+        onHover: function(evt) {
+            var elements = myPieChart.getElementsAtEvent(evt);
+            if (elements.length > 0) {
+                evt.target.style.cursor = 'pointer';
+            } else {
+                evt.target.style.cursor = 'default';
+            }
+        },
+    }
+});
+
+$('#tasks-open-closed-chart-canvas').click(function(evt){
+    var activePoints = myPieChart.getElementsAtEvent(evt);
+    if (activePoints.length >= 1) {
+        var index = activePoints[0]._index;
+        window.open(myPieChart.data.datasets[0].urls[index]);
     }
 });
 </script>
