@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import yaml
 from flask import Flask, render_template
 
@@ -5,6 +7,8 @@ import agenda
 import quotes
 from tasks import Tasks
 from workout import Workout
+
+NavigationItem = namedtuple('NavigationItem', 'id title icon')
 
 app = Flask(__name__)
 with open('config.yaml', 'r') as f:
@@ -24,21 +28,21 @@ def index_page():
     navigation = []
 
     data += quotes.quote()
-    navigation.append(('intro', 'Quote of the day'))
+    navigation.append(NavigationItem('quote-of-the-day', 'Quote of the day', 'message'))
 
     data += agenda.agenda_lazy_load()
-    navigation.append(('agenda', 'Agenda'))
+    navigation.append(NavigationItem('agenda', 'Agenda', 'calendar_today'))
 
     if _workout is not None:
         data += Workout.chart_lazy_load()
-        navigation.append(('workout-chart', 'Workout Chart'))
+        navigation.append(NavigationItem('workout-chart', 'Workout Chart', 'show_chart'))
 
         data += Workout.calendar_lazy_load()
-        navigation.append(('workout-stats', 'Workout Stats'))
+        navigation.append(NavigationItem('workout-stats', 'Workout Stats', 'table_chart'))
 
     if _tasks is not None:
         data += Tasks.chart_open_closed_lazyload()
-        navigation.append((Tasks.OPEN_CLOSED_ID, 'Tasks Open/Closed'))
+        navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, 'Tasks Open/Closed', 'playlist_add_check'))
 
     return render_template('index.html',
                            navigation=navigation,

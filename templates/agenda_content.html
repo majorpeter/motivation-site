@@ -2,7 +2,7 @@
 <p>No upcoming events!</p>
 {% else %}
 {% for class, items in agenda.items() %}
-<h4>{{ class.to_string() }}</h4>
+<h5>{{ class.to_string() }}</h5>
 {% for item in items %}
 <div class="item" title="{{ item.time|e }}">
     <div class="date">

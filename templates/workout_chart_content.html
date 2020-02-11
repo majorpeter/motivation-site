@@ -1,17 +1,12 @@
 <p><i class="fas {{ days_since_workout_fas_icon }}"></i> {{days_since_workout|safe}}</p>
 
-<div class="features">
-    <section class="chart-container">
-        <span class="icon solid major fa-code"></span>
-        <div id="chart-container" style="">
-            <canvas id="workout-chart-canvas"></canvas>
-        </div>
-    </section>
+<div class="chart-container" style="">
+    <canvas id="workout-chart-canvas"></canvas>
 </div>
 
 <script>
 var color = Chart.helpers.color;
-Chart.defaults.global.defaultFontColor = 'white';
+Chart.defaults.global.defaultFontColor = 'grey';
 
 var ctx = document.getElementById('workout-chart-canvas').getContext('2d');
 var myChart = new Chart.Line(ctx, {
