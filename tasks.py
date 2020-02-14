@@ -4,9 +4,6 @@ from flask import render_template
 
 class Tasks:
     OPEN_CLOSED_ID = 'tasks-open-closed'
-    STATE_COLOR_MAP = {
-        #TODO
-    }
 
     def __init__(self, config):
         self._config = config
@@ -46,7 +43,7 @@ class Tasks:
         return render_template('tasks_in_progress.html', issues=issues)
 
     @staticmethod
-    def chart_open_closed_lazyload():
+    def render_chart_open_closed_lazyload():
         return render_template('tasks_open_closed.html', id=Tasks.OPEN_CLOSED_ID)
 
     def issue_by_state_listing_url(self, state_id):

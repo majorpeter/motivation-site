@@ -16,15 +16,22 @@ class Workout:
         self._entries = None
         self._entries_fetch_time = None
 
-    def _get_entries(self):
+    def _get_entries(self, use_cached=False):
         with self._entries_lock:
-            if self._entries_fetch_time is None or time.mktime(time.localtime()) - time.mktime(self._entries_fetch_time) > 1000:
+            if not use_cached and not self.is_cache_up_to_date():
                 _entries = google_account.fetch_cells_from_sheet(self._config['sheet_id'], self._config['sheet_range'])
                 _entries_fetch_time = time.localtime()
             return copy(_entries)
 
-    def get_workout_days_for_range(self, days_range=7):
-        entries = self._get_entries()
+    def is_cache_up_to_date(self, max_age=1000):
+        if self._entries_fetch_time is None:
+            return False
+        if time.mktime(time.localtime()) - time.mktime(self._entries_fetch_time) > max_age:
+            return False
+        return True
+
+    def get_workout_days_for_range(self, days_range=7, use_cached=False):
+        entries = self._get_entries(use_cached=use_cached)
         result = []
 
         i = len(entries) - 1
@@ -52,16 +59,16 @@ class Workout:
             date_str = time.strftime(self._config['date_format'], date)
         return result
 
-    def days_since_workout(self):
-        entries = self._get_entries()
+    def days_since_workout(self, use_cached=False):
+        entries = self._get_entries(use_cached=use_cached)
         last_workout_date = time.strptime(entries[-1][0], self._config['date_format'])
         date = time.localtime()
         delta_sec = time.mktime(date) - time.mktime(last_workout_date)
         delta_day = int(delta_sec / 24 / 3600)
         return delta_day
 
-    def days_since_workout_message_html(self):
-        days = self.days_since_workout()
+    def days_since_workout_message_html(self, use_cached=False):
+        days = self.days_since_workout(use_cached=use_cached)
         if days == 0:
             return 'You have worked out <strong>today</strong>, great job!', 'fa-thumbs-up'
         elif days == 1:
@@ -71,10 +78,10 @@ class Workout:
         else:
             return 'You haven\'t worked out in <strong>%d days</strong>! Go training now!' % days, 'fa-exclamation'
 
-    def workout_calendar_data(self):
+    def workout_calendar_data(self, use_cached=False):
         t = time.localtime()
         cal = calendar.monthcalendar(t.tm_year, t.tm_mon)
-        days = self.get_workout_days_for_range(days_range=7)
+        days = self.get_workout_days_for_range(days_range=7, use_cached=use_cached)
         result = []
         for row in cal:
             rrow = []
@@ -101,9 +108,9 @@ class Workout:
     def calendar_lazy_load():
         return render_template('workout_calendar.html')
 
-    def chart_content(self):
-        days_since_workout_message, days_since_workout_icon = self.days_since_workout_message_html()
-        workout_days_data = self.get_workout_days_for_range()
+    def get_chart_content(self, use_cached=False):
+        days_since_workout_message, days_since_workout_icon = self.days_since_workout_message_html(use_cached=use_cached)
+        workout_days_data = self.get_workout_days_for_range(use_cached=use_cached)
 
         workout_dates = [x['date'] for x in workout_days_data]
         weight_measurements = [x['weight'] if 'weight' in x else None for x in workout_days_data]
@@ -112,13 +119,16 @@ class Workout:
         workout_dates.reverse()
         weight_measurements.reverse()
         workouts_per_week.reverse()
+        return {
+            'days_since_workout': days_since_workout_message,
+            'days_since_workout_fas_icon': days_since_workout_icon,
+            'workout_dates': workout_dates,
+            'workouts_per_week': workouts_per_week,
+            'weight_measurements': weight_measurements
+        }
 
-        return render_template('workout_chart_content.html',
-                               days_since_workout=days_since_workout_message,
-                               days_since_workout_fas_icon=days_since_workout_icon,
-                               workout_dates=workout_dates,
-                               workouts_per_week=workouts_per_week,
-                               weight_measurements=weight_measurements)
+    def render_chart_content(self):
+        return render_template('workout_chart_content.html', **self.get_chart_content(use_cached=False))
 
     def calendar_content(self):
         workout_cal_header, workout_cal = self.workout_calendar_data()

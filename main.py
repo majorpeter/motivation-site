@@ -42,7 +42,7 @@ def index_page():
         navigation.append(NavigationItem('workout-stats', 'Workout Stats', 'table_chart'))
 
     if _tasks is not None:
-        data += Tasks.chart_open_closed_lazyload()
+        data += Tasks.render_chart_open_closed_lazyload()
         navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, 'Tasks Open/Closed', 'playlist_add_check'))
 
     return render_template('index.html',
@@ -57,7 +57,7 @@ def agenda_get():
 
 @app.route('/workout-chart')
 def workout_chart_get():
-    return _workout.chart_content()
+    return _workout.render_chart_content()
 
 
 @app.route('/workout-calendar')
@@ -73,16 +73,6 @@ def tasks_open_closed_get():
 @app.route('/tasks-in-progress')
 def tasks_in_progress():
     return _tasks.get_in_progress_list_html()
-
-
-@app.route('/generic')
-def generic():
-    return render_template('generic.html')
-
-
-@app.route('/elements')
-def elements():
-    return render_template('elements.html')
 
 
 app.run(host='0.0.0.0', debug=True, use_reloader=False)
