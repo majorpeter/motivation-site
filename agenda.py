@@ -122,7 +122,8 @@ class Agenda:
         return result
 
     def render_agenda_cached(self):
-        return render_template('agenda.html', agenda=self.get_items(use_cached=True))
+        return render_template('agenda.html', agenda=self.get_items(use_cached=True),
+                               need_update=not self.is_cache_up_to_date())
 
     def render_agenda_content(self):
         return render_template('agenda_content.html', agenda=self.get_items())
