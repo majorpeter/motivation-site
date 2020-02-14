@@ -3,8 +3,8 @@ from collections import namedtuple
 import yaml
 from flask import Flask, render_template
 
-import agenda
 import quotes
+from agenda import Agenda
 from tasks import Tasks
 from workout import Workout
 
@@ -14,6 +14,7 @@ app = Flask(__name__)
 with open('config.yaml', 'r') as f:
     config = yaml.full_load(f)
 
+_agenda = Agenda()
 _workout = None
 if 'workout' in config:
     _workout = Workout(config['workout'])
@@ -30,7 +31,7 @@ def index_page():
     data += quotes.quote()
     navigation.append(NavigationItem('quote-of-the-day', 'Quote of the day', 'message'))
 
-    data += agenda.agenda_lazy_load()
+    data += _agenda.render_agenda_cached()
     navigation.append(NavigationItem('agenda', 'Agenda', 'calendar_today'))
 
     if _workout is not None:
@@ -51,7 +52,7 @@ def index_page():
 
 @app.route('/agenda')
 def agenda_get():
-    return agenda.agenda()
+    return _agenda.render_agenda_content()
 
 
 @app.route('/workout-chart')
