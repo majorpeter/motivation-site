@@ -12,7 +12,7 @@ import google_account
 from google_account import CalendarEvent
 
 _entries_lock = Lock()
-_entries = None
+_entries = defaultdict(list)
 _entries_fetch_time = None
 
 _weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -52,10 +52,10 @@ class DateClass(Enum):
         return 'Later'
 
 
-def get_agenda(max_items=10) -> Dict[DateClass, List[CalendarEvent]]:
+def get_agenda(max_items=10, use_cached=False) -> Dict[DateClass, List[CalendarEvent]]:
     global _entries_fetch_time, _entries
     with _entries_lock:
-        if _entries_fetch_time is None or time.mktime(time.localtime()) - time.mktime(_entries_fetch_time) > 600:
+        if not use_cached and (_entries_fetch_time is None or time.mktime(time.localtime()) - time.mktime(_entries_fetch_time) > 600):
             calendar_entries = google_account.fetch_calendar_events(max_items=max_items)
             _entries = sort_calendar_entries(calendar_entries)
             _entries_fetch_time = time.localtime()
@@ -114,7 +114,7 @@ def sort_calendar_entries(entries: List[CalendarEvent]) -> Dict[DateClass, List[
 
 
 def agenda_lazy_load():
-    return render_template('agenda.html')
+    return render_template('agenda.html', agenda=get_agenda(use_cached=True))
 
 
 def agenda():
