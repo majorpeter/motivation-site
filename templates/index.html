@@ -37,7 +37,12 @@
       </div>
       <main class="mdl-layout__content mdl-color--grey-100">
         <div class="mdl-grid">
-          {{ sections_data | safe }}
+          <div class="mdl-cell mdl-cell--8-col mdl-cell--8-col-tablet">
+            {{ content_left | safe }}
+          </div>
+          <div class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet">
+            {{ content_right | safe }}
+          </div>
         </div>
       </main>
     </div>

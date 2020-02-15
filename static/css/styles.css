@@ -147,6 +147,11 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 
 /*********************/
+div.padded-card {
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
 #agenda div.item {
     margin: 0 0 2em 0;
     clear: both;
@@ -166,4 +171,8 @@ table#workout-cal td.workout {
 
 table#workout-cal td.today {
     background-color: rgba(6, 59, 179, 0.25);
+}
+
+div#tasks-open-closed {
+    padding: 16px 32px;
 }

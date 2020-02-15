@@ -25,29 +25,28 @@ if 'redmine' in config:
 
 @app.route('/')
 def index_page():
-    data = ''
+    content_left = ''
+    content_right = ''
     navigation = []
 
-    data += quotes.quote()
+    content_right += quotes.quote()
     navigation.append(NavigationItem('quote-of-the-day', 'Quote of the day', 'message'))
 
-    data += _agenda.render_agenda_cached()
+    content_right += _agenda.render_agenda_cached()
     navigation.append(NavigationItem('agenda', 'Agenda', 'calendar_today'))
 
     if _workout is not None:
-        data += Workout.chart_lazy_load()
+        content_left += Workout.chart_lazy_load()
         navigation.append(NavigationItem('workout-chart', 'Workout Chart', 'show_chart'))
 
-        data += Workout.calendar_lazy_load()
-        navigation.append(NavigationItem('workout-stats', 'Workout Stats', 'table_chart'))
-
     if _tasks is not None:
-        data += Tasks.render_chart_open_closed_lazyload()
+        content_left += Tasks.render_chart_open_closed_lazyload()
         navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, 'Tasks Open/Closed', 'playlist_add_check'))
 
     return render_template('index.html',
                            navigation=navigation,
-                           sections_data=data)
+                           content_left=content_left,
+                           content_right=content_right)
 
 
 @app.route('/agenda')
