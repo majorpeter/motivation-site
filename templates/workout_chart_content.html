@@ -13,11 +13,11 @@ var myChart = new Chart.Line(ctx, {
     data: {
         labels: {{ workout_dates | tojson }},
         datasets: [{
-            label: 'Workouts Per Week',
+            label: '{{ _('Workouts Per Week') }}',
             data: {{ workouts_per_week | tojson }},
             yAxisID: 'perweekAxis',
         },{
-            label: 'Weight',
+            label: '{{ _('Weight') }}',
             data: {{ weight_measurements | tojson }},
             yAxisID: 'weightAxis',
             borderColor: '#b74e91',

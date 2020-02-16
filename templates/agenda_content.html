@@ -1,5 +1,5 @@
 {% if agenda|length == 0 %}
-<p>No upcoming events!</p>
+<p>{{ _('No upcoming events!') }}</p>
 {% else %}
 {% for class, items in agenda.items() %}
 <h5>{{ class.to_string() }}</h5>

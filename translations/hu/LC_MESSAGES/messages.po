@@ -1,0 +1,233 @@
+# Hungarian translations for Motivation Site.
+# Copyright (C) 2020 MP
+# This file is distributed under the same license as the Motivation site
+# project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2020-02-16 20:18+0100\n"
+"PO-Revision-Date: 2020-02-15 23:43+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: hu\n"
+"Language-Team: hu <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.8.0\n"
+
+#: agenda.py:15
+msgid "Monday"
+msgstr "Hétfő"
+
+#: agenda.py:15
+msgid "Tuesday"
+msgstr "Kedd"
+
+#: agenda.py:15
+msgid "Wednesday"
+msgstr "Szerda"
+
+#: agenda.py:15
+msgid "Thursday"
+msgstr "Csütörtök"
+
+#: agenda.py:15
+msgid "Friday"
+msgstr "Péntek"
+
+#: agenda.py:16
+msgid "Saturday"
+msgstr "Szombat"
+
+#: agenda.py:16
+msgid "Sunday"
+msgstr "Vasárnap"
+
+#: agenda.py:17
+msgid "Mon;Tue;Wed;Thu;Fri;Sat;Sun"
+msgstr "H;K;Sze;Cs;P;Szo;V"
+
+#: agenda.py:18
+msgid "January"
+msgstr "Január"
+
+#: agenda.py:18
+msgid "February"
+msgstr "Február"
+
+#: agenda.py:18
+msgid "March"
+msgstr "Március"
+
+#: agenda.py:18
+msgid "April"
+msgstr "Április"
+
+#: agenda.py:18
+msgid "May"
+msgstr "Május"
+
+#: agenda.py:18
+msgid "June"
+msgstr "Június"
+
+#: agenda.py:19
+msgid "July"
+msgstr "Július"
+
+#: agenda.py:19
+msgid "August"
+msgstr "Augusztus"
+
+#: agenda.py:19
+msgid "September"
+msgstr "Szeptember"
+
+#: agenda.py:19
+msgid "October"
+msgstr "Október"
+
+#: agenda.py:20
+msgid "November"
+msgstr "November"
+
+#: agenda.py:20
+msgid "December"
+msgstr "December"
+
+#: agenda.py:38
+msgid "Past"
+msgstr "Múltban"
+
+#: agenda.py:40
+msgid "Today"
+msgstr "Ma"
+
+#: agenda.py:42
+#, python-format
+msgid "Tomorrow (%s)"
+msgstr "Holnap (%s)"
+
+#: agenda.py:44
+msgid "This week"
+msgstr "Ezen a héten"
+
+#: agenda.py:46
+msgid "Next week"
+msgstr "Jövő héten"
+
+#: agenda.py:48
+#, python-format
+msgid "This month (%s)"
+msgstr "Ez a hónap (%s)"
+
+#: agenda.py:50
+#, python-format
+msgid "Next month (%s)"
+msgstr "Következő hónap (%s)"
+
+#: agenda.py:52
+msgid "Later"
+msgstr "Később"
+
+#: main.py:37
+msgid "Quote of the day"
+msgstr "Napi idézet"
+
+#: main.py:40 templates/agenda.html:3
+msgid "Agenda"
+msgstr "Események"
+
+#: main.py:44 templates/workout_chart.html:3
+msgid "Workout Chart"
+msgstr "Edzés Grafikon"
+
+#: main.py:48 templates/tasks_open_closed.html:3
+msgid "Tasks Open/Closed"
+msgstr "Nyitott/befejezett feladatok"
+
+#: tasks.py:30
+#, python-format
+msgid "%s issues are closed."
+msgstr "%s lezárt feladat."
+
+#: workout.py:74
+msgid "You have worked out <strong>today</strong>, great job!"
+msgstr "Voltál <strong>ma</strong> edzeni, szép munka!"
+
+#: workout.py:76
+msgid "You have worked out <strong>yesterday</strong>."
+msgstr "Voltál edzeni <strong>tegnap</strong>."
+
+#: workout.py:78
+#, python-format
+msgid ""
+"You have worked out <strong>%d days ago</strong>, maybe it's time to hit "
+"the gym?"
+msgstr ""
+"Ezelőtt <strong>%d nappal</strong> voltál edzeni, talán most már illene "
+"lemenni?"
+
+#: workout.py:80
+#, python-format
+msgid "You haven't worked out in <strong>%d days</strong>! Go training now!"
+msgstr "Nem edzettél már <strong>%d napja</strong>! Azonnal menj edzeni!"
+
+#: workout.py:99
+#, python-format
+msgid "%d workouts in the last week"
+msgstr "%d edzés az elmúlt héten"
+
+#: workout.py:100
+msgid "No data"
+msgstr "Nincs adat"
+
+#: workout.py:103
+#, python-format
+msgid "Your workout days in %d.%02d. so far:"
+msgstr "Edzésnapjaid %d.%02d. hónapban:"
+
+#: templates/agenda.html:11
+msgid "Open Calendar"
+msgstr "Naptár megnyitása"
+
+#: templates/agenda_content.html:2
+msgid "No upcoming events!"
+msgstr "Nincsenek közelgő események!"
+
+#: templates/index.html:8 templates/index.html:25
+msgid "Motivational Site"
+msgstr "Motivációs Oldal"
+
+#: templates/tasks_in_progress.html:10
+msgid "No issues found in progress."
+msgstr "Nincsenek folyamatban lévő feladatok."
+
+#: templates/tasks_open_closed.html:7
+msgid "Issues In Progress"
+msgstr "Folyamatban lévő feladatok"
+
+#: templates/workout_calendar_content.html:1
+msgid "Calendar"
+msgstr "Naptár"
+
+#: templates/workout_calendar_content.html:15
+msgid "Workout Days"
+msgstr "Edzésnapok"
+
+#: templates/workout_calendar_content.html:19
+msgid "Date"
+msgstr "Dátum"
+
+#: templates/workout_calendar_content.html:20
+#: templates/workout_chart_content.html:20
+msgid "Weight"
+msgstr "Tömeg"
+
+#: templates/workout_chart_content.html:16
+msgid "Workouts Per Week"
+msgstr "Edzések Hetente"
+

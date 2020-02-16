@@ -4,6 +4,7 @@ from copy import copy
 from threading import Lock
 
 from flask import render_template
+from flask_babel import gettext
 
 import google_account
 
@@ -70,13 +71,13 @@ class Workout:
     def days_since_workout_message_html(self, use_cached=False):
         days = self.days_since_workout(use_cached=use_cached)
         if days == 0:
-            return 'You have worked out <strong>today</strong>, great job!', 'fa-thumbs-up'
+            return gettext('You have worked out <strong>today</strong>, great job!'), 'fa-thumbs-up'
         elif days == 1:
-            return 'You have worked out <strong>yesterday</strong>.', 'fa-thumbs-up'
+            return gettext('You have worked out <strong>yesterday</strong>.'), 'fa-thumbs-up'
         elif days < 4:
-            return 'You have worked out <strong>%d days ago</strong>, maybe it\'s time to hit the gym?' % days, 'fa-exclamation-triangle'
+            return gettext('You have worked out <strong>%d days ago</strong>, maybe it\'s time to hit the gym?') % days, 'fa-exclamation-triangle'
         else:
-            return 'You haven\'t worked out in <strong>%d days</strong>! Go training now!' % days, 'fa-exclamation'
+            return gettext('You haven\'t worked out in <strong>%d days</strong>! Go training now!') % days, 'fa-exclamation'
 
     def workout_calendar_data(self, use_cached=False):
         t = time.localtime()
@@ -95,10 +96,11 @@ class Workout:
                         'day': cell,
                         'today': cell == t.tm_mday,
                         'workout': len(workout_day) != 0 and workout_day[0]['workout_day'],
-                        'hint': '%d workouts in the last week' % workout_day[0]['count'] if len(workout_day) != 0 else 'No data'
+                        'hint': gettext('%d workouts in the last week') % workout_day[0]['count'] if len(
+                            workout_day) != 0 else gettext('No data')
                     })
             result.append(rrow)
-        return 'Your workout days in %d.%02d. so far:' % (t.tm_year, t.tm_mon), result
+        return gettext('Your workout days in %d.%02d. so far:') % (t.tm_year, t.tm_mon), result
 
     @staticmethod
     def chart_lazy_load():

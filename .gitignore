@@ -5,3 +5,5 @@ venv/
 config.yaml
 __pycache__/
 quotes.txt
+messages.pot
+translations/*/LC_MESSAGES/messages.mo

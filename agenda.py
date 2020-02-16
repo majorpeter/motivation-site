@@ -1,20 +1,23 @@
 import time
 from collections import defaultdict
 from copy import copy
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from enum import Enum
 from threading import Lock
-from typing import List, Dict
+from typing import List, Dict, NamedTuple
 
 from flask import render_template
+from flask_babel import gettext
 
 import google_account
 from google_account import CalendarEvent
 
-
-_weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-           'November', 'December']
+_weekdays = [gettext('Monday'), gettext('Tuesday'), gettext('Wednesday'), gettext('Thursday'), gettext('Friday'),
+             gettext('Saturday'), gettext('Sunday')]
+_weekdays_short_array = gettext('Mon;Tue;Wed;Thu;Fri;Sat;Sun')
+_months = [gettext('January'), gettext('February'), gettext('March'), gettext('April'), gettext('May'), gettext('June'),
+           gettext('July'), gettext('August'), gettext('September'), gettext('October'),
+           gettext('November'), gettext('December')]
 
 
 class DateClass(Enum):
@@ -32,21 +35,42 @@ class DateClass(Enum):
             today = time.localtime()
 
         if self == DateClass.PAST:
-            return 'Past'
+            return gettext('Past')
         if self == DateClass.TODAY:
-            return 'Today'
+            return gettext('Today')
         if self == DateClass.TOMORROW:
-            return 'Tomorrow (%s)' % _weekdays[(today.tm_wday + 1) % 7]
+            return gettext('Tomorrow (%s)') % gettext(_weekdays[(today.tm_wday + 1) % 7])
         if self == DateClass.THIS_WEEK:
-            return 'This week'
+            return gettext('This week')
         if self == DateClass.NEXT_WEEK:
-            return 'Next week'
+            return gettext('Next week')
         if self == DateClass.THIS_MONTH:
-            return 'This month (%s)' % _months[today.tm_mon - 1]
+            return gettext('This month (%s)') % gettext(_months[today.tm_mon - 1])
         if self == DateClass.NEXT_MONTH:
-            return 'Next month (%s)' % _months[(today.tm_mon - 1 + 1) % 12]
+            return gettext('Next month (%s)') % gettext(_months[(today.tm_mon - 1 + 1) % 12])
 
-        return 'Later'
+        return gettext('Later')
+
+
+class LocalizedCalendarEvent(NamedTuple):
+    """
+    Based on the one in google_account
+    """
+    title: str
+    time: datetime
+    url: str
+
+    @staticmethod
+    def from_calendar_event(event: CalendarEvent):
+        return LocalizedCalendarEvent(title=event.title, time=event.time, url=event.url)
+
+    @property
+    def day_in_month(self) -> int:
+        return self.time.day
+
+    @property
+    def day_name_short(self) -> str:
+        return gettext(_weekdays_short_array).split(';')[self.time.weekday()]
 
 
 class Agenda:
@@ -118,7 +142,7 @@ class Agenda:
         for entry in entries:
             now = datetime.now(tz=entry.time.tzinfo)
             today = datetime(year=now.year, month=now.month, day=now.day, tzinfo=now.tzinfo)
-            result[Agenda.classify_datetime(entry.time, today)].append(entry)
+            result[Agenda.classify_datetime(entry.time, today)].append(LocalizedCalendarEvent.from_calendar_event(entry))
         return result
 
     def render_agenda_cached(self):

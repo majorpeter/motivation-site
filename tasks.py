@@ -1,5 +1,6 @@
 import redminelib
 from flask import render_template
+from flask_babel import gettext
 
 
 class Tasks:
@@ -26,7 +27,7 @@ class Tasks:
             if state.is_closed:
                 closed_count += len(state.issues)
         total_count = sum(counts)
-        message = '<strong>%d/%d</strong> issues are closed.' % (closed_count, total_count)
+        message = gettext('%s issues are closed.') % ('<strong>%d/%d</strong>' % (closed_count, total_count))
         return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 

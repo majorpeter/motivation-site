@@ -2,6 +2,7 @@ from collections import namedtuple
 
 import yaml
 from flask import Flask, render_template
+from flask_babel import Babel, gettext
 
 import quotes
 from agenda import Agenda
@@ -13,6 +14,8 @@ NavigationItem = namedtuple('NavigationItem', 'id title icon')
 app = Flask(__name__)
 with open('config.yaml', 'r') as f:
     config = yaml.full_load(f)
+
+babel = Babel(app, default_locale=config['locale'])
 
 _agenda = Agenda()
 _workout = None
@@ -30,18 +33,18 @@ def index_page():
     navigation = []
 
     content_right += quotes.quote()
-    navigation.append(NavigationItem('quote-of-the-day', 'Quote of the day', 'message'))
+    navigation.append(NavigationItem('quote-of-the-day', gettext('Quote of the day'), 'message'))
 
     content_right += _agenda.render_agenda_cached()
-    navigation.append(NavigationItem('agenda', 'Agenda', 'calendar_today'))
+    navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
 
     if _workout is not None:
         content_left += Workout.chart_lazy_load()
-        navigation.append(NavigationItem('workout-chart', 'Workout Chart', 'show_chart'))
+        navigation.append(NavigationItem('workout-chart', gettext('Workout Chart'), 'show_chart'))
 
     if _tasks is not None:
         content_left += Tasks.render_chart_open_closed_lazyload()
-        navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, 'Tasks Open/Closed', 'playlist_add_check'))
+        navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, gettext('Tasks Open/Closed'), 'playlist_add_check'))
 
     return render_template('index.html',
                            navigation=navigation,

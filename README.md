@@ -13,3 +13,21 @@ docker build -t motivation .
 ```
 docker run --rm -d -p 80:5000 --name motivation motivation
 ```
+
+## Localization
+To extract all messages (generate `*.pot`):
+```
+pybabel extract -F babel.cfg -o messages.pot .
+```
+To initialize new translation (e.g. `LANGUAGE_CODE` is `de` for German):
+```
+pybabel init -i messages.pot -d translations -l <LANGUAGE_CODE>
+```
+To update messages (*.po files) from template:
+```
+pybabel update -i messages.pot -d translations
+```
+To generate binary files (*.mo):
+```
+pybabel compile -d translations
+```

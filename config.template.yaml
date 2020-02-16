@@ -1,3 +1,5 @@
+locale: 'en'
+
 workout:
   sheet_id:  "" # from google spreadsheet URL (part between https://docs.google.com/spreadsheets/d/ and /edit#gid=...)
   sheet_range:  "A2:B"
