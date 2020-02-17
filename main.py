@@ -77,4 +77,9 @@ def tasks_in_progress():
     return _tasks.get_in_progress_list_html()
 
 
+@app.route('/tasks-open-closed-timeline')
+def tasks_open_closed_timeline():
+    return _tasks.render_chart_open_closed_timeline()
+
+
 app.run(host='0.0.0.0', debug=True, use_reloader=False)

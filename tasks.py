@@ -1,6 +1,11 @@
+from builtins import map
+from datetime import date
+from typing import NamedTuple
+
 import redminelib
 from flask import render_template
 from flask_babel import gettext
+from redminelib.exceptions import ResourceAttrError
 
 
 class Tasks:
@@ -31,6 +36,28 @@ class Tasks:
         return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
+    def get_open_closed_timeline(self):
+        creation_dates = []
+        close_dates = []
+        issues = self._redmine.issue.all(sort='id:asc')
+        for issue in issues:
+            creation_dates.append(issue.created_on.date())
+            try:
+                close_dates.append(issue.closed_on.date())
+            except ResourceAttrError:
+                pass  # not closed yet
+
+        # walk through dates to recreate timeline
+        timeline_dates = sorted(list(set(creation_dates + close_dates)))
+        timeline = {}
+        opened = 0
+        closed = 0
+        for _date in timeline_dates:
+            opened += creation_dates.count(_date)
+            closed += close_dates.count(_date)
+            timeline[_date] = {'opened': opened, 'closed': closed}
+        return timeline
+
     def get_in_progress_list_html(self):
         issues = []
         if 'in_progress_id' in self._config:
@@ -47,6 +74,15 @@ class Tasks:
         return render_template('tasks_open_closed.html', id=Tasks.OPEN_CLOSED_ID,
                                all_issues_url=self._config['url'] + 'issues',
                                all_projects_url=self._config['url'] + 'projects')
+
+    def render_chart_open_closed_timeline(self):
+        timeline = self.get_open_closed_timeline()
+        variables = {
+            'dates': [str(k) for k in timeline.keys()],
+            'open': [v['opened'] - v['closed'] for k, v in timeline.items()],
+            'closed': [v['closed'] for k, v in timeline.items()]
+        }
+        return render_template('tasks_open_closed_timeline.html', **variables)
 
     def issue_by_state_listing_url(self, state_id):
         #TODO nicer solution :/

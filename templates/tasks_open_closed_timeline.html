@@ -1,0 +1,26 @@
+<div id="tasks-timeline-chart-container">
+    <canvas id="tasks-open-closed-timeline-chart-canvas"></canvas>
+</div>
+
+<script>
+var color = Chart.helpers.color;
+Chart.defaults.global.defaultFontColor = 'grey';
+
+var ctx = document.getElementById('tasks-open-closed-timeline-chart-canvas').getContext('2d');
+var myChart = new Chart.Line(ctx, {
+    data: {
+        labels: {{ dates | tojson }},
+        datasets: [{
+            label: '{{ _('Issues Open') }}',
+            data: {{ open | tojson }},
+            borderColor: '#839fd4ad',
+            backgroundColor: color('#839fd4ad').alpha(0.3).rgbString(),
+        }, {
+            label: '{{ _('Issues Closed') }}',
+            data: {{ closed | tojson }},
+            borderColor: color('#00ce25ad').alpha(0.5).rgbString(),
+            backgroundColor: color('#00ce25ad').alpha(0.3).rgbString(),
+        }]
+    }
+});
+</script>

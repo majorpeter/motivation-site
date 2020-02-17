@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-17 08:03+0100\n"
+"POT-Creation-Date: 2020-02-17 23:18+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -149,7 +149,7 @@ msgstr "Edzés Grafikon"
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
-#: tasks.py:30
+#: tasks.py:35
 #, python-format
 msgid "%s issues are closed."
 msgstr "%s lezárt feladat."
@@ -210,13 +210,25 @@ msgstr "Nincsenek folyamatban lévő feladatok."
 msgid "Issues In Progress"
 msgstr "Folyamatban lévő feladatok"
 
-#: templates/tasks_open_closed.html:15
+#: templates/tasks_open_closed.html:14
+msgid "Open/Close Timeline"
+msgstr "Nyitás/Lezárás idővonal"
+
+#: templates/tasks_open_closed.html:21
 msgid "All issues"
 msgstr "Összes feladat"
 
-#: templates/tasks_open_closed.html:19
+#: templates/tasks_open_closed.html:25
 msgid "All projects"
 msgstr "Összes projekt"
+
+#: templates/tasks_open_closed_timeline.html:14
+msgid "Issues Open"
+msgstr "Nyitott feladatok"
+
+#: templates/tasks_open_closed_timeline.html:19
+msgid "Issues Closed"
+msgstr "Lezárt feladatok"
 
 #: templates/workout_calendar_content.html:1
 msgid "Calendar"
