@@ -43,7 +43,7 @@ def index_page():
         navigation.append(NavigationItem('workout-chart', gettext('Workout Chart'), 'show_chart'))
 
     if _tasks is not None:
-        content_left += Tasks.render_chart_open_closed_lazyload()
+        content_left += _tasks.render_chart_open_closed_lazyload()
         navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, gettext('Tasks Open/Closed'), 'playlist_add_check'))
 
     return render_template('index.html',

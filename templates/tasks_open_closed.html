@@ -1,10 +1,22 @@
-<div id="tasks-open-closed" class="mdl-grid mdl-shadow--2dp mdl-color--white">
-    <div class="mdl-cell mdl-cell--8-col">
-        <h2 class="mdl-card__title-text">{{ _('Tasks Open/Closed') }}</h2>
-        <div class="lazy-load" data-url="tasks-open-closed"></div>
+<div id="tasks-open-closed" class="mdl-shadow--2dp mdl-color--white">
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--8-col">
+            <h2 class="mdl-card__title-text">{{ _('Tasks Open/Closed') }}</h2>
+            <div class="lazy-load" data-url="tasks-open-closed"></div>
+        </div>
+        <div class="mdl-cell mdl-cell--3-col">
+            <h3 class="mdl-card__title-text">{{ _('Issues In Progress') }}</h3>
+            <div class="lazy-load" data-url="tasks-in-progress"></div>
+        </div>
     </div>
-    <div class="mdl-cell mdl-cell--3-col">
-        <h3 class="mdl-card__title-text">{{ _('Issues In Progress') }}</h3>
-        <div class="lazy-load" data-url="tasks-in-progress"></div>
+    <div class="mdl-card__actions mdl-card--border">
+        <a href="{{ all_issues_url }}" target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">assignment</i>
+            {{ _('All issues') }}
+        </a>
+        <a href="{{ all_projects_url }}" target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">class</i>
+            {{ _('All projects') }}
+        </a>
     </div>
 </div>

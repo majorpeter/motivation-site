@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-16 20:18+0100\n"
+"POT-Creation-Date: 2020-02-17 08:03+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -133,19 +133,19 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:37
+#: main.py:36
 msgid "Quote of the day"
 msgstr "Napi idézet"
 
-#: main.py:40 templates/agenda.html:3
+#: main.py:39 templates/agenda.html:3
 msgid "Agenda"
 msgstr "Események"
 
-#: main.py:44 templates/workout_chart.html:3
+#: main.py:43 templates/workout_chart.html:3
 msgid "Workout Chart"
 msgstr "Edzés Grafikon"
 
-#: main.py:48 templates/tasks_open_closed.html:3
+#: main.py:47 templates/tasks_open_closed.html:4
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
@@ -206,9 +206,17 @@ msgstr "Motivációs Oldal"
 msgid "No issues found in progress."
 msgstr "Nincsenek folyamatban lévő feladatok."
 
-#: templates/tasks_open_closed.html:7
+#: templates/tasks_open_closed.html:8
 msgid "Issues In Progress"
 msgstr "Folyamatban lévő feladatok"
+
+#: templates/tasks_open_closed.html:15
+msgid "All issues"
+msgstr "Összes feladat"
+
+#: templates/tasks_open_closed.html:19
+msgid "All projects"
+msgstr "Összes projekt"
 
 #: templates/workout_calendar_content.html:1
 msgid "Calendar"

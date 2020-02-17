@@ -172,7 +172,3 @@ table#workout-cal td.workout {
 table#workout-cal td.today {
     background-color: rgba(6, 59, 179, 0.25);
 }
-
-div#tasks-open-closed {
-    padding: 16px 32px;
-}

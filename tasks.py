@@ -43,9 +43,10 @@ class Tasks:
                 })
         return render_template('tasks_in_progress.html', issues=issues)
 
-    @staticmethod
-    def render_chart_open_closed_lazyload():
-        return render_template('tasks_open_closed.html', id=Tasks.OPEN_CLOSED_ID)
+    def render_chart_open_closed_lazyload(self):
+        return render_template('tasks_open_closed.html', id=Tasks.OPEN_CLOSED_ID,
+                               all_issues_url=self._config['url'] + 'issues',
+                               all_projects_url=self._config['url'] + 'projects')
 
     def issue_by_state_listing_url(self, state_id):
         #TODO nicer solution :/
