@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-17 23:18+0100\n"
+"POT-Creation-Date: 2020-02-17 23:24+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -229,6 +229,10 @@ msgstr "Nyitott feladatok"
 #: templates/tasks_open_closed_timeline.html:19
 msgid "Issues Closed"
 msgstr "Lezárt feladatok"
+
+#: templates/tasks_open_closed_timeline.html:24
+msgid "Total Issues"
+msgstr "Összes feladat"
 
 #: templates/workout_calendar_content.html:1
 msgid "Calendar"

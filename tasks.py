@@ -80,7 +80,8 @@ class Tasks:
         variables = {
             'dates': [str(k) for k in timeline.keys()],
             'open': [v['opened'] - v['closed'] for k, v in timeline.items()],
-            'closed': [v['closed'] for k, v in timeline.items()]
+            'closed': [v['closed'] for k, v in timeline.items()],
+            'total': [v['opened'] for k, v in timeline.items()],
         }
         return render_template('tasks_open_closed_timeline.html', **variables)
 

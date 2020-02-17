@@ -20,6 +20,10 @@ var myChart = new Chart.Line(ctx, {
             data: {{ closed | tojson }},
             borderColor: color('#00ce25ad').alpha(0.5).rgbString(),
             backgroundColor: color('#00ce25ad').alpha(0.3).rgbString(),
+        }, {
+            label: '{{ _('Total Issues') }}',
+            data: {{ total | tojson }},
+            hidden: true
         }]
     },
     options: {
