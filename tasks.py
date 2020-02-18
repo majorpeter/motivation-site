@@ -130,7 +130,8 @@ class Tasks:
 
             sum += count
             _date += timedelta(days=1)
-        return render_template('tasks_contributions.html', calendar=calendar, sum=sum)
+        return render_template('tasks_contributions.html', calendar=calendar, sum=sum,
+                               url_prefix=self._config['url'] + 'activity?from=')
 
     def render_chart_open_closed_timeline(self):
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)

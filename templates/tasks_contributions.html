@@ -22,4 +22,7 @@ $('#contributions rect.day').hover(function() {
     });
     componentHandler.downgradeElements(tooltip_element);
 });
+$('#contributions rect.day').click(function() {
+    window.open('{{ url_prefix }}' + this.dataset['date'], '_blank');
+});
 </script>
