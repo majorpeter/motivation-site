@@ -15,7 +15,10 @@ app = Flask(__name__)
 with open('config.yaml', 'r') as f:
     config = yaml.full_load(f)
 
-babel = Babel(app, default_locale=config['locale'])
+locale = 'en'
+if 'locale' in config:
+    locale = config['locale']
+babel = Babel(app, default_locale=locale)
 
 _agenda = Agenda()
 _workout = None
