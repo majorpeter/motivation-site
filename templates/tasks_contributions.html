@@ -1,6 +1,6 @@
-<h6>{{ ngettext('%(num)d contribution in the last year', '%(num)d contributions in the last year', sum) }}</h6>
+<h6>{{ ngettext('%(num)d contribution in the last year', '%(num)d contributions in the last year', contrib_sum) }}</h6>
 <svg id="contributions" width="860" height="120">
-    <g transform="translate(10, 0)">{% for week in calendar %}
+    <g transform="translate(10, 0)">{% for week in contrib_calendar %}
         <g transform="translate({{ loop.index0 * 16 }}, 0)">{% for day in week %}
             <rect class="day" width="12" height="12" x="5" y="{{ loop.index0 * 15 }}" data-count="{{ day.count }}" data-date="{{ day.day }}" fill="{{ day.color }}"></rect>{% endfor %}
         </g>{% endfor %}
@@ -23,6 +23,6 @@ $('#contributions rect.day').hover(function() {
     componentHandler.downgradeElements(tooltip_element);
 });
 $('#contributions rect.day').click(function() {
-    window.open('{{ url_prefix }}' + this.dataset['date'], '_blank');
+    window.open('{{ contrib_url_prefix }}' + this.dataset['date'], '_blank');
 });
 </script>

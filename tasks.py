@@ -1,6 +1,7 @@
 import time
 from copy import copy
 from datetime import date, timedelta
+from threading import Lock
 from typing import NamedTuple
 
 import redminelib
@@ -17,46 +18,53 @@ class Tasks:
             self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
 
             self._last_updated = None
+            self._update_lock = Lock()
 
             self.open_closed_timeline = {}
             self.journal = {}
 
         def update(self):
-            creation_dates = []
-            close_dates = []
-            journal_dates = []
-            issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
-            for issue in issues:
-                creation_dates.append(issue.created_on.date())
-                try:
-                    close_dates.append(issue.closed_on.date())
-                except ResourceAttrError:
-                    pass  # not closed yet
+            with self._update_lock:  # fields can still be taken but the lock has to be used when invoking update
+                creation_dates = []
+                close_dates = []
+                journal_dates = []
+                issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
+                for issue in issues:
+                    creation_dates.append(issue.created_on.date())
+                    try:
+                        close_dates.append(issue.closed_on.date())
+                    except ResourceAttrError:
+                        pass  # not closed yet
 
-                for journal in issue.journals:
-                    journal_dates.append(journal.created_on.date())
+                    for journal in issue.journals:
+                        journal_dates.append(journal.created_on.date())
 
-            # walk through dates to recreate open/closed timeline
-            open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
-            open_closed_timeline = {}
-            opened = 0
-            closed = 0
-            for _date in open_closed_timeline_dates:
-                opened += creation_dates.count(_date)
-                closed += close_dates.count(_date)
-                open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
+                # walk through dates to recreate open/closed timeline
+                open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
+                open_closed_timeline = {}
+                opened = 0
+                closed = 0
+                for _date in open_closed_timeline_dates:
+                    opened += creation_dates.count(_date)
+                    closed += close_dates.count(_date)
+                    open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
 
-            self.open_closed_timeline = open_closed_timeline
-            self.journal = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
+                self.open_closed_timeline = open_closed_timeline
+                self.journal = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
 
-            self._last_updated = time.localtime()
+                self._last_updated = time.localtime()
+
+        def is_up_to_date(self, max_age=1800):
+            if self._last_updated is None:
+                return False
+            if time.mktime(time.localtime()) - time.mktime(self._last_updated) > max_age:
+                return False
+            return True
 
     def __init__(self, config):
         self._config = config
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
         self._cached_data = Tasks.CachedData(config)
-        #TODO automatic:
-        self._cached_data.update()
 
     def chart_open_closed(self):
         states = self._redmine.issue_status.all()
@@ -92,11 +100,15 @@ class Tasks:
         return render_template('tasks_in_progress.html', issues=issues)
 
     def render_chart_open_closed_lazyload(self):
-        return render_template('tasks_open_closed.html', id=Tasks.OPEN_CLOSED_ID,
-                               all_issues_url=self._config['url'] + 'issues',
-                               all_projects_url=self._config['url'] + 'projects')
+        vars = {
+            'id': Tasks.OPEN_CLOSED_ID,
+            'all_issues_url': self._config['url'] + 'issues',
+            'all_projects_url': self._config['url'] + 'projects',
+        }
+        vars.update(self.get_chart_contributions_vars(use_cached=True))
+        return render_template('tasks_open_closed.html', **vars)
 
-    def render_chart_contributions(self, range_days=365):
+    def get_chart_contributions_vars(self, range_days=365, use_cached=False):
         class Day(NamedTuple):
             day: date
             count: int
@@ -116,6 +128,9 @@ class Tasks:
 
                 return '#f1f4f3'
 
+        if not use_cached and not self._cached_data.is_up_to_date():
+            self._cached_data.update()
+
         journal = copy(self._cached_data.journal)
         end_date = date.today()
         _date = end_date - timedelta(days=range_days)
@@ -130,8 +145,15 @@ class Tasks:
 
             sum += count
             _date += timedelta(days=1)
-        return render_template('tasks_contributions.html', calendar=calendar, sum=sum,
-                               url_prefix=self._config['url'] + 'activity?from=')
+        return {
+            'contrib_calendar': calendar,
+            'contrib_sum': sum,
+            'contrib_url_prefix': self._config['url'] + 'activity?from=',
+            'contrib_need_update': not self._cached_data.is_up_to_date()
+        }
+
+    def render_chart_contributions(self, range_days=365):
+        return render_template('tasks_contributions.html', **self.get_chart_contributions_vars(range_days=range_days))
 
     def render_chart_open_closed_timeline(self):
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)
