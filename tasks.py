@@ -121,12 +121,16 @@ class Tasks:
         _date = end_date - timedelta(days=range_days)
         _date -= timedelta(days=_date.weekday())  # find Monday in that week
         calendar = []
+        sum = 0
         while _date <= end_date:
             if _date.weekday() == 0:
                 calendar.append([])
-            calendar[-1].append(Day(_date, journal[_date] if _date in journal else 0))
+            count = journal[_date] if _date in journal else 0
+            calendar[-1].append(Day(_date, count))
+
+            sum += count
             _date += timedelta(days=1)
-        return render_template('tasks_contributions.html', calendar=calendar)
+        return render_template('tasks_contributions.html', calendar=calendar, sum=sum)
 
     def render_chart_open_closed_timeline(self):
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)

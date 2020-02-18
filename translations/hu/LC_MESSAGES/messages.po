@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-17 23:24+0100\n"
+"POT-Creation-Date: 2020-02-18 23:14+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -133,23 +133,23 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:36
+#: main.py:39
 msgid "Quote of the day"
 msgstr "Napi idézet"
 
-#: main.py:39 templates/agenda.html:3
+#: main.py:42 templates/agenda.html:3
 msgid "Agenda"
 msgstr "Események"
 
-#: main.py:43 templates/workout_chart.html:3
+#: main.py:46 templates/workout_chart.html:3
 msgid "Workout Chart"
 msgstr "Edzés Grafikon"
 
-#: main.py:47 templates/tasks_open_closed.html:4
+#: main.py:50 templates/tasks_open_closed.html:4
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
-#: tasks.py:35
+#: tasks.py:78
 #, python-format
 msgid "%s issues are closed."
 msgstr "%s lezárt feladat."
@@ -202,6 +202,12 @@ msgstr "Nincsenek közelgő események!"
 msgid "Motivational Site"
 msgstr "Motivációs Oldal"
 
+#: templates/tasks_contributions.html:1
+#, python-format
+msgid "%(num)d contribution in the last year"
+msgid_plural "%(num)d contributions in the last year"
+msgstr[0] "%(num)d hozzájárulás az elmúlt évben"
+
 #: templates/tasks_in_progress.html:10
 msgid "No issues found in progress."
 msgstr "Nincsenek folyamatban lévő feladatok."
@@ -211,14 +217,18 @@ msgid "Issues In Progress"
 msgstr "Folyamatban lévő feladatok"
 
 #: templates/tasks_open_closed.html:14
+msgid "Contributions"
+msgstr "Hozzájárulások"
+
+#: templates/tasks_open_closed.html:20
 msgid "Open/Close Timeline"
 msgstr "Nyitás/Lezárás idővonal"
 
-#: templates/tasks_open_closed.html:21
+#: templates/tasks_open_closed.html:27
 msgid "All issues"
 msgstr "Összes feladat"
 
-#: templates/tasks_open_closed.html:25
+#: templates/tasks_open_closed.html:31
 msgid "All projects"
 msgstr "Összes projekt"
 
@@ -254,4 +264,3 @@ msgstr "Tömeg"
 #: templates/workout_chart_content.html:16
 msgid "Workouts Per Week"
 msgstr "Edzések Hetente"
-
