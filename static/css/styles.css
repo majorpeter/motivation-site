@@ -172,3 +172,8 @@ table#workout-cal td.workout {
 table#workout-cal td.today {
     background-color: rgba(6, 59, 179, 0.25);
 }
+
+#contributions text.weekday {
+    font-size: 9px;
+    color: rgba(0,0,0,.54);
+}
