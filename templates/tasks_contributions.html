@@ -1,0 +1,5 @@
+<svg width="850" height="120">{% for week in calendar %}
+    <g transform="translate({{ loop.index0 * 16 }}, 0)">{% for day in week %}
+        <rect class="day" width="12" height="12" x="5" y="{{ loop.index0 * 15 }}" data-count="{{ day.count }}" data-date="{{ day.date }}" fill="{{ day.color }}"></rect>{% endfor %}
+    </g>{% endfor %}
+</svg>

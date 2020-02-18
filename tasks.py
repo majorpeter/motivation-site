@@ -1,5 +1,7 @@
 import time
 from copy import copy
+from datetime import date, timedelta
+from typing import NamedTuple
 
 import redminelib
 from flask import render_template
@@ -94,9 +96,37 @@ class Tasks:
                                all_issues_url=self._config['url'] + 'issues',
                                all_projects_url=self._config['url'] + 'projects')
 
-    def render_chart_contributions(self):
+    def render_chart_contributions(self, range_days=365):
+        class Day(NamedTuple):
+            day: date
+            count: int
+
+            limits = {
+                8: '#32701a',
+                5: '#49a027',
+                3: '#8ec865',
+                1: '#cde184'
+            }
+
+            @property
+            def color(self):
+                for limit, color in Day.limits.items():
+                    if self.count >= limit:
+                        return color
+
+                return '#f1f4f3'
+
         journal = copy(self._cached_data.journal)
-        return render_template('tasks_contributions.html', journal)
+        end_date = date.today()
+        _date = end_date - timedelta(days=range_days)
+        _date -= timedelta(days=_date.weekday())  # find Monday in that week
+        calendar = []
+        while _date <= end_date:
+            if _date.weekday() == 0:
+                calendar.append([])
+            calendar[-1].append(Day(_date, journal[_date] if _date in journal else 0))
+            _date += timedelta(days=1)
+        return render_template('tasks_contributions.html', calendar=calendar)
 
     def render_chart_open_closed_timeline(self):
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)
