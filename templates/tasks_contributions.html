@@ -2,10 +2,24 @@
 <svg id="contributions" width="860" height="120">
     <g transform="translate(10, 0)">{% for week in calendar %}
         <g transform="translate({{ loop.index0 * 16 }}, 0)">{% for day in week %}
-            <rect class="day" width="12" height="12" x="5" y="{{ loop.index0 * 15 }}" data-count="{{ day.count }}" data-date="{{ day.date }}" fill="{{ day.color }}"></rect>{% endfor %}
+            <rect class="day" width="12" height="12" x="5" y="{{ loop.index0 * 15 }}" data-count="{{ day.count }}" data-date="{{ day.day }}" fill="{{ day.color }}"></rect>{% endfor %}
         </g>{% endfor %}
         <text class="weekday" x="-10" y="0" dy="10">M</text>
         <text class="weekday" x="-10" y="30" dy="10">W</text>
         <text class="weekday" x="-10" y="60" dy="10">F</text>
     </g>
 </svg>
+<div id="contribution-tooltip" class="mdl-tooltip" data-mdl-for="contribution-hover"></div>
+<script>
+var tooltip_element = document.getElementById('contribution-tooltip');
+$('#contributions rect.day').hover(function() {
+    this.id = 'contribution-hover';
+    tooltip_element.innerHTML = '<b>' + this.dataset['count'] + '</b>' + '{{ _(' contributions(s) on ') }}<br/>' + this.dataset['date'];
+    componentHandler.upgradeElement(tooltip_element);
+}, function() {
+    $('#contribution-hover').each(function(index, value) {
+        value.id = '';
+    });
+    componentHandler.downgradeElements(tooltip_element);
+});
+</script>

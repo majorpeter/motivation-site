@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-18 23:14+0100\n"
+"POT-Creation-Date: 2020-02-19 00:07+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -208,6 +208,10 @@ msgid "%(num)d contribution in the last year"
 msgid_plural "%(num)d contributions in the last year"
 msgstr[0] "%(num)d hozzájárulás az elmúlt évben"
 
+#: templates/tasks_contributions.html:17
+msgid " contributions(s) on "
+msgstr " hozzájárulás ezen a napon: "
+
 #: templates/tasks_in_progress.html:10
 msgid "No issues found in progress."
 msgstr "Nincsenek folyamatban lévő feladatok."
@@ -264,3 +268,4 @@ msgstr "Tömeg"
 #: templates/workout_chart_content.html:16
 msgid "Workouts Per Week"
 msgstr "Edzések Hetente"
+
