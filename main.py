@@ -79,6 +79,9 @@ def tasks_open_closed_get():
 def tasks_in_progress():
     return _tasks.get_in_progress_list_html()
 
+@app.route('/tasks-contributions')
+def tasks_contributions():
+    return _tasks.render_chart_contributions()
 
 @app.route('/tasks-open-closed-timeline')
 def tasks_open_closed_timeline():

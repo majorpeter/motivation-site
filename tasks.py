@@ -94,6 +94,10 @@ class Tasks:
                                all_issues_url=self._config['url'] + 'issues',
                                all_projects_url=self._config['url'] + 'projects')
 
+    def render_chart_contributions(self):
+        journal = copy(self._cached_data.journal)
+        return render_template('tasks_contributions.html', journal)
+
     def render_chart_open_closed_timeline(self):
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)
         variables = {

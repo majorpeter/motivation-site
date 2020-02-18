@@ -1,12 +1,7 @@
-<p><i class="fas fa-map-signs"></i> {{ message | safe }}</p>
+<p>{{ message | safe }}</p>
 
-<div class="features">
-    <section class="chart-container">
-        <span class="icon solid major fa-code"></span>
-        <div id="tasks-chart-container" style="">
-            <canvas id="tasks-open-closed-chart-canvas"></canvas>
-        </div>
-    </section>
+<div id="tasks-chart-container" style="">
+    <canvas id="tasks-open-closed-chart-canvas"></canvas>
 </div>
 
 <script>
