@@ -1,6 +1,5 @@
-from builtins import map
-from datetime import date
-from typing import NamedTuple
+import time
+from copy import copy
 
 import redminelib
 from flask import render_template
@@ -11,9 +10,51 @@ from redminelib.exceptions import ResourceAttrError
 class Tasks:
     OPEN_CLOSED_ID = 'tasks-open-closed'
 
+    class CachedData:
+        def __init__(self, config):
+            self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
+
+            self._last_updated = None
+
+            self.open_closed_timeline = {}
+            self.journal = {}
+
+        def update(self):
+            creation_dates = []
+            close_dates = []
+            journal_dates = []
+            issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
+            for issue in issues:
+                creation_dates.append(issue.created_on.date())
+                try:
+                    close_dates.append(issue.closed_on.date())
+                except ResourceAttrError:
+                    pass  # not closed yet
+
+                for journal in issue.journals:
+                    journal_dates.append(journal.created_on.date())
+
+            # walk through dates to recreate open/closed timeline
+            open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
+            open_closed_timeline = {}
+            opened = 0
+            closed = 0
+            for _date in open_closed_timeline_dates:
+                opened += creation_dates.count(_date)
+                closed += close_dates.count(_date)
+                open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
+
+            self.open_closed_timeline = open_closed_timeline
+            self.journal = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
+
+            self._last_updated = time.localtime()
+
     def __init__(self, config):
         self._config = config
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
+        self._cached_data = Tasks.CachedData(config)
+        #TODO automatic:
+        self._cached_data.update()
 
     def chart_open_closed(self):
         states = self._redmine.issue_status.all()
@@ -36,28 +77,6 @@ class Tasks:
         return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
-    def get_open_closed_timeline(self):
-        creation_dates = []
-        close_dates = []
-        issues = self._redmine.issue.all(sort='id:asc')
-        for issue in issues:
-            creation_dates.append(issue.created_on.date())
-            try:
-                close_dates.append(issue.closed_on.date())
-            except ResourceAttrError:
-                pass  # not closed yet
-
-        # walk through dates to recreate timeline
-        timeline_dates = sorted(list(set(creation_dates + close_dates)))
-        timeline = {}
-        opened = 0
-        closed = 0
-        for _date in timeline_dates:
-            opened += creation_dates.count(_date)
-            closed += close_dates.count(_date)
-            timeline[_date] = {'opened': opened, 'closed': closed}
-        return timeline
-
     def get_in_progress_list_html(self):
         issues = []
         if 'in_progress_id' in self._config:
@@ -76,12 +95,12 @@ class Tasks:
                                all_projects_url=self._config['url'] + 'projects')
 
     def render_chart_open_closed_timeline(self):
-        timeline = self.get_open_closed_timeline()
+        open_closed_timeline = copy(self._cached_data.open_closed_timeline)
         variables = {
-            'dates': [str(k) for k in timeline.keys()],
-            'open': [v['opened'] - v['closed'] for k, v in timeline.items()],
-            'closed': [v['closed'] for k, v in timeline.items()],
-            'total': [v['opened'] for k, v in timeline.items()],
+            'dates': [str(k) for k in open_closed_timeline.keys()],
+            'open': [v['opened'] - v['closed'] for k, v in open_closed_timeline.items()],
+            'closed': [v['closed'] for k, v in open_closed_timeline.items()],
+            'total': [v['opened'] for k, v in open_closed_timeline.items()],
         }
         return render_template('tasks_open_closed_timeline.html', **variables)
 
