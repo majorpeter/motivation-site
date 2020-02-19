@@ -15,9 +15,7 @@ app = Flask(__name__)
 with open('config.yaml', 'r') as f:
     config = yaml.full_load(f)
 
-locale = 'en'
-if 'locale' in config:
-    locale = config['locale']
+locale = config['locale'] if 'locale' in config else 'en'
 babel = Babel(app, default_locale=locale)
 
 _agenda = Agenda()
@@ -50,6 +48,7 @@ def index_page():
         navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, gettext('Tasks Open/Closed'), 'playlist_add_check'))
 
     return render_template('index.html',
+                           title=config['title'] if 'title' in config else gettext('Motivational Site'),
                            navigation=navigation,
                            content_left=content_left,
                            content_right=content_right)
