@@ -66,7 +66,7 @@ class Tasks:
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
         self._cached_data = Tasks.CachedData(config)
 
-    def chart_open_closed(self):
+    def render_chart_states(self):
         states = self._redmine.issue_status.all()
         names = []
         counts = []
@@ -84,7 +84,7 @@ class Tasks:
                 closed_count += len(state.issues)
         total_count = sum(counts)
         message = gettext('%s issues are closed.') % ('<strong>%d/%d</strong>' % (closed_count, total_count))
-        return render_template('tasks_open_closed_content.html', message=message, names=names, counts=counts, urls=urls,
+        return render_template('tasks_states_chart_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
     def get_in_progress_list_html(self):
@@ -99,14 +99,14 @@ class Tasks:
                 })
         return render_template('tasks_in_progress.html', issues=issues)
 
-    def render_chart_open_closed_lazyload(self):
+    def render_layout(self):
         vars = {
             'id': Tasks.OPEN_CLOSED_ID,
             'all_issues_url': self._config['url'] + 'issues',
             'all_projects_url': self._config['url'] + 'projects',
         }
         vars.update(self.get_chart_contributions_vars(use_cached=True))
-        return render_template('tasks_open_closed.html', **vars)
+        return render_template('tasks.html', **vars)
 
     def get_chart_contributions_vars(self, range_days=365, use_cached=False):
         class Day(NamedTuple):
