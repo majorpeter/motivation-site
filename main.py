@@ -42,7 +42,7 @@ def index_page():
     navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
 
     if _workout is not None:
-        content_left += Workout.chart_lazy_load()
+        content_left += _workout.chart_lazy_load()
         navigation.append(NavigationItem('workout-chart', gettext('Workout Chart'), 'show_chart'))
 
     if _tasks is not None:
@@ -67,7 +67,7 @@ def workout_chart_get():
 
 @app.route('/workout-calendar')
 def workout_calendar_get():
-    return _workout.calendar_content()
+    return _workout.render_calendar_content()
 
 
 @app.route('/tasks-open-closed')

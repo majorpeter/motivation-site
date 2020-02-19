@@ -1,4 +1,7 @@
-<p><i class="fas {{ days_since_workout_fas_icon }}"></i> {{days_since_workout|safe}}</p>
+<p class="message">
+    <i class="material-icons">{{ days_since_workout_icon }}</i>
+    <span>{{days_since_workout|safe}}</span>
+</p>
 
 <div class="chart-container" style="">
     <canvas id="workout-chart-canvas"></canvas>

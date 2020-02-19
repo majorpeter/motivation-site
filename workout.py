@@ -1,6 +1,7 @@
 import calendar
 import time
 from copy import copy
+from datetime import timedelta, date, datetime
 from threading import Lock
 
 from flask import render_template
@@ -14,25 +15,33 @@ class Workout:
         self._config = config
 
         self._entries_lock = Lock()
-        self._entries = None
-        self._entries_fetch_time = None
+        self._entries = []
+        self._last_updated = None
 
-    def _get_entries(self, use_cached=False):
+    def update(self, max_age_days=60):
         with self._entries_lock:
-            if not use_cached and not self.is_cache_up_to_date():
-                _entries = google_account.fetch_cells_from_sheet(self._config['sheet_id'], self._config['sheet_range'])
-                _entries_fetch_time = time.localtime()
-            return copy(_entries)
+            entries = google_account.fetch_cells_from_sheet(self._config['sheet_id'], self._config['sheet_range'])
 
-    def is_cache_up_to_date(self, max_age=1000):
-        if self._entries_fetch_time is None:
+            min_date = date.today() - timedelta(days=max_age_days)
+            for keep_index in range(len(entries)):
+                _date = datetime.strptime(entries[keep_index][0], self._config['date_format']).date()
+                if _date >= min_date:
+                    break
+            self._entries = entries[keep_index:]
+            self._last_updated = time.localtime()
+
+    def is_up_to_date(self, max_age=1000):
+        if self._last_updated is None:
             return False
-        if time.mktime(time.localtime()) - time.mktime(self._entries_fetch_time) > max_age:
+        if time.mktime(time.localtime()) - time.mktime(self._last_updated) > max_age:
             return False
         return True
 
     def get_workout_days_for_range(self, days_range=7, use_cached=False):
-        entries = self._get_entries(use_cached=use_cached)
+        if not use_cached and not self.is_up_to_date():
+            self.update()
+
+        entries = copy(self._entries)
         result = []
 
         i = len(entries) - 1
@@ -61,7 +70,12 @@ class Workout:
         return result
 
     def days_since_workout(self, use_cached=False):
-        entries = self._get_entries(use_cached=use_cached)
+        if not use_cached and not self.is_up_to_date():
+            self.update()
+
+        entries = copy(self._entries)
+        if len(entries) == 0:
+            return -1
         last_workout_date = time.strptime(entries[-1][0], self._config['date_format'])
         date = time.localtime()
         delta_sec = time.mktime(date) - time.mktime(last_workout_date)
@@ -70,14 +84,16 @@ class Workout:
 
     def days_since_workout_message_html(self, use_cached=False):
         days = self.days_since_workout(use_cached=use_cached)
-        if days == 0:
-            return gettext('You have worked out <strong>today</strong>, great job!'), 'fa-thumbs-up'
+        if days < 0: # error state
+            return gettext('Fetching data...'), 'error'
+        elif days == 0:
+            return gettext('You have worked out <strong>today</strong>, great job!'), 'thumb_up'
         elif days == 1:
-            return gettext('You have worked out <strong>yesterday</strong>.'), 'fa-thumbs-up'
+            return gettext('You have worked out <strong>yesterday</strong>.'), 'thumb_up'
         elif days < 4:
-            return gettext('You have worked out <strong>%d days ago</strong>, maybe it\'s time to hit the gym?') % days, 'fa-exclamation-triangle'
+            return gettext('You have worked out <strong>%d days ago</strong>, maybe it\'s time to hit the gym?') % days, 'warning'
         else:
-            return gettext('You haven\'t worked out in <strong>%d days</strong>! Go training now!') % days, 'fa-exclamation'
+            return gettext('You haven\'t worked out in <strong>%d days</strong>! Go training now!') % days, 'error'
 
     def workout_calendar_data(self, use_cached=False):
         t = time.localtime()
@@ -102,13 +118,11 @@ class Workout:
             result.append(rrow)
         return gettext('Your workout days in %d.%02d. so far:') % (t.tm_year, t.tm_mon), result
 
-    @staticmethod
-    def chart_lazy_load():
-        return render_template('workout_chart.html')
-
-    @staticmethod
-    def calendar_lazy_load():
-        return render_template('workout_calendar.html')
+    def chart_lazy_load(self):
+        # merge the dicts returned by the two to pass as kwargs
+        return render_template('workout_chart.html',
+                               **{**self.get_chart_content(use_cached=True),
+                                  **self.get_calendar_content(use_cached=True)})
 
     def get_chart_content(self, use_cached=False):
         days_since_workout_message, days_since_workout_icon = self.days_since_workout_message_html(use_cached=use_cached)
@@ -123,20 +137,24 @@ class Workout:
         workouts_per_week.reverse()
         return {
             'days_since_workout': days_since_workout_message,
-            'days_since_workout_fas_icon': days_since_workout_icon,
+            'days_since_workout_icon': days_since_workout_icon,
             'workout_dates': workout_dates,
             'workouts_per_week': workouts_per_week,
-            'weight_measurements': weight_measurements
+            'weight_measurements': weight_measurements,
+            'need_update': not self.is_up_to_date()
         }
 
     def render_chart_content(self):
         return render_template('workout_chart_content.html', **self.get_chart_content(use_cached=False))
 
-    def calendar_content(self):
-        workout_cal_header, workout_cal = self.workout_calendar_data()
-        workout_days_data = self.get_workout_days_for_range()
+    def get_calendar_content(self, use_cached=False):
+        workout_cal_header, workout_cal = self.workout_calendar_data(use_cached=use_cached)
+        workout_days_data = self.get_workout_days_for_range(use_cached=use_cached)
+        return {
+            'workout_cal_header': workout_cal_header,
+            'workout_cal': workout_cal,
+            'workout': workout_days_data[:10]
+        }
 
-        return render_template('workout_calendar_content.html',
-                               workout_cal_header=workout_cal_header,
-                               workout_cal=workout_cal,
-                               workout=workout_days_data[:10])
+    def render_calendar_content(self):
+        return render_template('workout_calendar_content.html', **self.get_calendar_content(use_cached=False))

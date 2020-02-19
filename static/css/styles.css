@@ -164,6 +164,10 @@ div.padded-card {
     font-size: 90%;
 }
 
+#workout-chart p.message i.material-icons {
+    vertical-align: middle;
+}
+
 table#workout-cal td.workout {
     font-weight: bold;
     text-decoration: underline;

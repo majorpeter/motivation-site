@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-19 00:07+0100\n"
+"POT-Creation-Date: 2020-02-19 10:59+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -149,20 +149,24 @@ msgstr "Edzés Grafikon"
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
-#: tasks.py:78
+#: tasks.py:86
 #, python-format
 msgid "%s issues are closed."
 msgstr "%s lezárt feladat."
 
-#: workout.py:74
+#: workout.py:88
+msgid "Fetching data..."
+msgstr "Adatok letöltése..."
+
+#: workout.py:90
 msgid "You have worked out <strong>today</strong>, great job!"
 msgstr "Voltál <strong>ma</strong> edzeni, szép munka!"
 
-#: workout.py:76
+#: workout.py:92
 msgid "You have worked out <strong>yesterday</strong>."
 msgstr "Voltál edzeni <strong>tegnap</strong>."
 
-#: workout.py:78
+#: workout.py:94
 #, python-format
 msgid ""
 "You have worked out <strong>%d days ago</strong>, maybe it's time to hit "
@@ -171,21 +175,21 @@ msgstr ""
 "Ezelőtt <strong>%d nappal</strong> voltál edzeni, talán most már illene "
 "lemenni?"
 
-#: workout.py:80
+#: workout.py:96
 #, python-format
 msgid "You haven't worked out in <strong>%d days</strong>! Go training now!"
 msgstr "Nem edzettél már <strong>%d napja</strong>! Azonnal menj edzeni!"
 
-#: workout.py:99
+#: workout.py:115
 #, python-format
 msgid "%d workouts in the last week"
 msgstr "%d edzés az elmúlt héten"
 
-#: workout.py:100
+#: workout.py:116
 msgid "No data"
 msgstr "Nincs adat"
 
-#: workout.py:103
+#: workout.py:119
 #, python-format
 msgid "Your workout days in %d.%02d. so far:"
 msgstr "Edzésnapjaid %d.%02d. hónapban:"
@@ -198,7 +202,7 @@ msgstr "Naptár megnyitása"
 msgid "No upcoming events!"
 msgstr "Nincsenek közelgő események!"
 
-#: templates/index.html:8 templates/index.html:25
+#: templates/index.html:8 templates/index.html:26
 msgid "Motivational Site"
 msgstr "Motivációs Oldal"
 
@@ -224,15 +228,15 @@ msgstr "Folyamatban lévő feladatok"
 msgid "Contributions"
 msgstr "Hozzájárulások"
 
-#: templates/tasks_open_closed.html:20
+#: templates/tasks_open_closed.html:22
 msgid "Open/Close Timeline"
 msgstr "Nyitás/Lezárás idővonal"
 
-#: templates/tasks_open_closed.html:27
+#: templates/tasks_open_closed.html:29
 msgid "All issues"
 msgstr "Összes feladat"
 
-#: templates/tasks_open_closed.html:31
+#: templates/tasks_open_closed.html:33
 msgid "All projects"
 msgstr "Összes projekt"
 
