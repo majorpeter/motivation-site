@@ -118,9 +118,9 @@ class Workout:
             result.append(rrow)
         return gettext('Your workout days in %d.%02d. so far:') % (t.tm_year, t.tm_mon), result
 
-    def chart_lazy_load(self):
+    def render_layout(self):
         # merge the dicts returned by the two to pass as kwargs
-        return render_template('workout_chart.html',
+        return render_template('workout.html',
                                **{**self.get_chart_content(use_cached=True),
                                   **self.get_calendar_content(use_cached=True),
                                   'spreadsheet_url': 'https://docs.google.com/spreadsheets/d/' +
