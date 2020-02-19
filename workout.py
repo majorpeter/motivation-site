@@ -122,7 +122,9 @@ class Workout:
         # merge the dicts returned by the two to pass as kwargs
         return render_template('workout_chart.html',
                                **{**self.get_chart_content(use_cached=True),
-                                  **self.get_calendar_content(use_cached=True)})
+                                  **self.get_calendar_content(use_cached=True),
+                                  'spreadsheet_url': 'https://docs.google.com/spreadsheets/d/' +
+                                                     self._config['sheet_id']})
 
     def get_chart_content(self, use_cached=False):
         days_since_workout_message, days_since_workout_icon = self.days_since_workout_message_html(use_cached=use_cached)

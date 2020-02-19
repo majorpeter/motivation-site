@@ -10,4 +10,10 @@
             {% include 'workout_calendar_content.html' %}
         </div>
     </div>
+    <div class="mdl-card__actions mdl-card--border">
+        <a href="{{ spreadsheet_url }}" target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">table_chart</i>
+            {{ _('Open Spreadsheet') }}
+        </a>
+    </div>
 </div>

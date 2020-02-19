@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-19 10:59+0100\n"
+"POT-Creation-Date: 2020-02-19 21:40+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -133,21 +133,25 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:39
+#: main.py:37
 msgid "Quote of the day"
 msgstr "Napi idézet"
 
-#: main.py:42 templates/agenda.html:3
+#: main.py:40 templates/agenda.html:3
 msgid "Agenda"
 msgstr "Események"
 
-#: main.py:46 templates/workout_chart.html:3
+#: main.py:44 templates/workout_chart.html:3
 msgid "Workout Chart"
 msgstr "Edzés Grafikon"
 
-#: main.py:50 templates/tasks_open_closed.html:4
+#: main.py:48 templates/tasks_open_closed.html:4
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
+
+#: main.py:51
+msgid "Motivational Site"
+msgstr "Motivációs Oldal"
 
 #: tasks.py:86
 #, python-format
@@ -201,10 +205,6 @@ msgstr "Naptár megnyitása"
 #: templates/agenda_content.html:2
 msgid "No upcoming events!"
 msgstr "Nincsenek közelgő események!"
-
-#: templates/index.html:8 templates/index.html:26
-msgid "Motivational Site"
-msgstr "Motivációs Oldal"
 
 #: templates/tasks_contributions.html:1
 #, python-format
@@ -265,11 +265,15 @@ msgid "Date"
 msgstr "Dátum"
 
 #: templates/workout_calendar_content.html:20
-#: templates/workout_chart_content.html:20
+#: templates/workout_chart_content.html:23
 msgid "Weight"
 msgstr "Tömeg"
 
-#: templates/workout_chart_content.html:16
+#: templates/workout_chart.html:16
+msgid "Open Spreadsheet"
+msgstr "Táblázat megnyitása"
+
+#: templates/workout_chart_content.html:19
 msgid "Workouts Per Week"
 msgstr "Edzések Hetente"
 
