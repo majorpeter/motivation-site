@@ -149,7 +149,14 @@ _:-ms-input-placeholder, :root .demo-graph {
 /*********************/
 div.padded-card {
     padding: 16px;
+}
+
+div#content-left > div, div#content-right > div {
     margin-bottom: 16px;
+}
+
+div#content-left > div:last-child, div#content-right > div:last-child {
+    margin-bottom: 0;
 }
 
 #agenda div.item {
