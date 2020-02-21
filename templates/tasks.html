@@ -6,7 +6,9 @@
         </div>
         <div class="mdl-cell mdl-cell--3-col">
             <h3 class="mdl-card__title-text">{{ _('Issues In Progress') }}</h3>
-            <div class="lazy-load" data-url="tasks-in-progress"></div>
+            <div{% if contrib_need_update %} class="lazy-load" data-url="tasks-in-progress"{% endif %}>
+                {% include 'tasks_in_progress.html' %}
+            </div>
         </div>
     </div>
     <div class="mdl-grid">

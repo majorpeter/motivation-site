@@ -1,6 +1,6 @@
-{% if issues %}
+{% if issues_in_progress %}
 <ul>
-{% for i in issues %}
+{% for i in issues_in_progress %}
     <li><a href="{{ i.url }}" target="_blank">{{ i.subject }}</a>{% if i.done_ratio %}<sub>({{ i.done_ratio }}%)</sub>{% endif %}
     </li>
 {% endfor %}

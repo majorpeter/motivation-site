@@ -76,7 +76,7 @@ def tasks_open_closed_get():
 
 @app.route('/tasks-in-progress')
 def tasks_in_progress():
-    return _tasks.get_in_progress_list_html()
+    return _tasks.render_in_progress_list_html()
 
 
 @app.route('/tasks-contributions')

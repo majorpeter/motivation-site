@@ -15,6 +15,7 @@ class Tasks:
 
     class CachedData:
         def __init__(self, config):
+            self._config = config
             self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
 
             self._last_updated = None
@@ -22,10 +23,13 @@ class Tasks:
 
             self.open_closed_timeline = {}
             self.contributions = {}
+            self.issues_in_progress = []
 
         def update(self):
             with self._update_lock:  # fields can still be taken but the lock has to be used when invoking update
                 self._update_contributions_and_open_closed_timeline()
+                self._update_issues_in_progress()
+
                 self._last_updated = time.localtime()
 
         def _update_contributions_and_open_closed_timeline(self):
@@ -55,6 +59,18 @@ class Tasks:
 
             self.open_closed_timeline = open_closed_timeline
             self.contributions = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
+
+        def _update_issues_in_progress(self):
+            issues = []
+            if 'in_progress_id' in self._config:
+                issue_state = self._redmine.issue_status.get(self._config['in_progress_id'])
+                for issue in issue_state.issues:
+                    issues.append({
+                        'subject': issue.subject,
+                        'url': self._config['url'] + 'issues/' + str(issue.id),
+                        'done_ratio': issue.done_ratio
+                    })
+            self.issues_in_progress = issues
 
         def is_up_to_date(self, max_age=1800):
             if self._last_updated is None:
@@ -89,21 +105,15 @@ class Tasks:
         return render_template('tasks_states_chart_content.html', message=message, names=names, counts=counts, urls=urls,
                                backgrounds=backgrounds)
 
-    def get_in_progress_list_html(self):
-        issues = []
-        if 'in_progress_id' in self._config:
-            issue_state = self._redmine.issue_status.get(self._config['in_progress_id'])
-            for issue in issue_state.issues:
-                issues.append({
-                    'subject': issue.subject,
-                    'url': self._config['url'] + 'issues/' + str(issue.id),
-                    'done_ratio': issue.done_ratio
-                })
-        return render_template('tasks_in_progress.html', issues=issues)
+    def render_in_progress_list_html(self):
+        if not self._cached_data.is_up_to_date():
+            self._cached_data.update()
+        return render_template('tasks_in_progress.html', issues_in_progress=self._cached_data.issues_in_progress)
 
     def render_layout(self):
         vars = {
             'id': Tasks.OPEN_CLOSED_ID,
+            'issues_in_progress': self._cached_data.issues_in_progress,
             'all_issues_url': self._config['url'] + 'issues',
             'all_projects_url': self._config['url'] + 'projects',
         }
