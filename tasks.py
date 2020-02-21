@@ -27,6 +27,8 @@ class Tasks:
 
         def update(self):
             with self._update_lock:  # fields can still be taken but the lock has to be used when invoking update
+                if self.is_up_to_date(max_age=10):
+                    return  # if another request already triggered the update recently, this call can be skipped
                 self._update_contributions_and_open_closed_timeline()
                 self._update_issues_in_progress()
 
