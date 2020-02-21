@@ -21,38 +21,40 @@ class Tasks:
             self._update_lock = Lock()
 
             self.open_closed_timeline = {}
-            self.journal = {}
+            self.contributions = {}
 
         def update(self):
             with self._update_lock:  # fields can still be taken but the lock has to be used when invoking update
-                creation_dates = []
-                close_dates = []
-                journal_dates = []
-                issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
-                for issue in issues:
-                    creation_dates.append(issue.created_on.date())
-                    try:
-                        close_dates.append(issue.closed_on.date())
-                    except ResourceAttrError:
-                        pass  # not closed yet
-
-                    for journal in issue.journals:
-                        journal_dates.append(journal.created_on.date())
-
-                # walk through dates to recreate open/closed timeline
-                open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
-                open_closed_timeline = {}
-                opened = 0
-                closed = 0
-                for _date in open_closed_timeline_dates:
-                    opened += creation_dates.count(_date)
-                    closed += close_dates.count(_date)
-                    open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
-
-                self.open_closed_timeline = open_closed_timeline
-                self.journal = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
-
+                self._update_contributions_and_open_closed_timeline()
                 self._last_updated = time.localtime()
+
+        def _update_contributions_and_open_closed_timeline(self):
+            creation_dates = []
+            close_dates = []
+            journal_dates = []
+            issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
+            for issue in issues:
+                creation_dates.append(issue.created_on.date())
+                try:
+                    close_dates.append(issue.closed_on.date())
+                except ResourceAttrError:
+                    pass  # not closed yet
+
+                for journal in issue.journals:
+                    journal_dates.append(journal.created_on.date())
+
+            # walk through dates to recreate open/closed timeline
+            open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
+            open_closed_timeline = {}
+            opened = 0
+            closed = 0
+            for _date in open_closed_timeline_dates:
+                opened += creation_dates.count(_date)
+                closed += close_dates.count(_date)
+                open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
+
+            self.open_closed_timeline = open_closed_timeline
+            self.contributions = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
 
         def is_up_to_date(self, max_age=1800):
             if self._last_updated is None:
@@ -131,7 +133,7 @@ class Tasks:
         if not use_cached and not self._cached_data.is_up_to_date():
             self._cached_data.update()
 
-        journal = copy(self._cached_data.journal)
+        journal = copy(self._cached_data.contributions)
         end_date = date.today()
         _date = end_date - timedelta(days=range_days)
         _date -= timedelta(days=_date.weekday())  # find Monday in that week
