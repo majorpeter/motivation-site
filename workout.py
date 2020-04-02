@@ -76,7 +76,10 @@ class Workout:
         entries = copy(self._entries)
         if len(entries) == 0:
             return -1
-        last_workout_date = time.strptime(entries[-1][0], self._config['date_format'])
+        try:
+            last_workout_date = time.strptime(entries[-1][0], self._config['date_format'])
+        except ValueError:
+            return -1
         date = time.localtime()
         delta_sec = time.mktime(date) - time.mktime(last_workout_date)
         delta_day = int(delta_sec / 24 / 3600)
@@ -84,7 +87,7 @@ class Workout:
 
     def days_since_workout_message_html(self, use_cached=False):
         days = self.days_since_workout(use_cached=use_cached)
-        if days < 0: # error state
+        if days < 0:  # error state
             return gettext('Fetching data...'), 'error'
         elif days == 0:
             return gettext('You have worked out <strong>today</strong>, great job!'), 'thumb_up'
