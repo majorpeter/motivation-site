@@ -184,6 +184,15 @@ table#workout-cal td.today {
     background-color: rgba(6, 59, 179, 0.25);
 }
 
+#contributions-container {
+    overflow-x: hidden;
+    max-width: 860px;
+}
+
+#contributions {
+    float: right;
+}
+
 #contributions rect.day {
     cursor: pointer;
 }
