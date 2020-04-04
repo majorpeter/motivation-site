@@ -30,6 +30,16 @@ var myChart = new Chart.Line(ctx, {
         legend: {
             position: 'bottom',
         },
+        scales: {
+            xAxes: [{
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        month: 'YYYY-MM'
+                    }
+                }
+            }],
+        }
     }
 });
 </script>
