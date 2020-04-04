@@ -54,10 +54,12 @@ class Tasks:
             open_closed_timeline = {}
             opened = 0
             closed = 0
+            from_date = date.today() - timedelta(days=365)  # only care about the last year
             for _date in open_closed_timeline_dates:
                 opened += creation_dates.count(_date)
                 closed += close_dates.count(_date)
-                open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
+                if _date >= from_date:
+                    open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
 
             self.open_closed_timeline = open_closed_timeline
             self.contributions = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
