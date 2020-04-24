@@ -4,6 +4,29 @@ import yaml
 from flask import url_for, render_template
 
 
+def _parse_title_style(item):
+    title_style = []
+    if 'background' in item:
+        for key, css_prop in {
+            'color': 'background-color',
+            'size': 'background-size',
+            'pos-x': 'background-position-x',
+            'pos-y': 'background-position-y',
+        }.items():
+            if key in item['background']:
+                title_style.append(css_prop + ':' + item['background'][key])
+        if 'image' in item['background']:
+            title_style.append('background-image:url(' + url_for('static', filename='user/' + item['background']['image']) + ')')
+            title_style.append('background-repeat:no-repeat')
+    for key, css_prop in {
+        'color': 'color',
+        'height': 'height',
+    }.items():
+        if key in item:
+            title_style.append(css_prop + ':' + item[key])
+    return ';'.join(title_style)
+
+
 def get_user_content_right():
     result_html = ''
     file_list = listdir(path.join(path.dirname(__file__), 'static', 'user'))
@@ -12,27 +35,7 @@ def get_user_content_right():
             with open(path.join(path.dirname(__file__), 'static', 'user', file_name), mode='r') as f:
                 item = yaml.full_load(f)
 
-            if 'title' in item:
-                title_style = []
-                if 'background' in item['title']:
-                    bg = item['title']['background']
-                    if 'color' in bg:
-                        title_style.append('background-color:' + bg['color'])
-                    if 'image' in bg:
-                        title_style.append('background-image:url(' + url_for('static', filename='user/' + bg['image']) + ')')
-                        title_style.append('background-repeat:no-repeat')
-                    if 'size' in bg:
-                        title_style.append('background-size:' + bg['size'])
-                    if 'pos-x' in bg:
-                        title_style.append('background-position-x:' + bg['pos-x'])
-                    if 'pos-y' in bg:
-                        title_style.append('background-position-y:' + bg['pos-y'])
-                if 'color' in item['title']:
-                    title_style.append('color:' + item['title']['color'])
-                if 'height' in item['title']:
-                    title_style.append('height:' + item['title']['height'])
-                title_style = ';'.join(title_style)
-
+            title_style = _parse_title_style(item['title']) if 'title' in item else ''
             result_html += render_template('user_block.html', **item, title_style=title_style)
 
     return result_html
