@@ -7,6 +7,7 @@ from flask_babel import Babel, gettext
 import quotes
 from agenda import Agenda
 from tasks import Tasks
+from user import get_user_content_right
 from workout import Workout
 
 NavigationItem = namedtuple('NavigationItem', 'id title icon')
@@ -32,6 +33,8 @@ def index_page():
     content_left = ''
     content_right = ''
     navigation = []
+
+    content_right += get_user_content_right()
 
     content_right += quotes.quote()
     navigation.append(NavigationItem('quote-of-the-day', gettext('Quote of the day'), 'message'))

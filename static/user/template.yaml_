@@ -1,0 +1,18 @@
+title:
+  text: 'Lorem Ipsum'
+  color: '#e2e2e2'
+  background:
+    image: 'backgroung.jpg'
+    color: '#000000'
+    size: 260px
+    pos-x: 100%
+    pos-y: 0%
+  height: 200px
+content: | # HTML content
+  <ul>
+  <li>Non dolore elit adipisicing ea reprehenderit consectetur culpa.</li>
+  </ul>
+actions:
+  -
+    text: 'Open Youtube'
+    url: 'https://www.youtube.com/'
