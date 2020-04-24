@@ -1,7 +1,7 @@
 from os import path, listdir
 
 import yaml
-from flask import url_for
+from flask import url_for, render_template
 
 
 def get_user_content_right():
@@ -12,7 +12,6 @@ def get_user_content_right():
             with open(path.join(path.dirname(__file__), 'static', 'user', file_name), mode='r') as f:
                 item = yaml.full_load(f)
 
-            result_html += '<div class="mdl-color--white mdl-shadow--2dp">'
             if 'title' in item:
                 title_style = []
                 if 'background' in item['title']:
@@ -34,15 +33,6 @@ def get_user_content_right():
                     title_style.append('height:' + item['title']['height'])
                 title_style = ';'.join(title_style)
 
-                result_html += '<div class="mdl-card__title mdl-card--expand" style="' + title_style + '">' \
-                  '<h2 class="mdl-card__title-text">' + item['title']['text'] + '</h2>' \
-                  '</div><div class="mdl-card__supporting-text mdl-color-text--grey-600">'
-            result_html += item['content']
-            result_html += '</div>'
-            if 'actions' in item:
-                result_html += '<div class="mdl-card__actions mdl-card--border">'
-                for action in item['actions']:
-                    result_html += '<a href="' + action['url'] + '" class="mdl-button mdl-js-button mdl-js-ripple-effect" data-upgraded=",MaterialButton,MaterialRipple" target="_blank">' + action['text'] + '<span class="mdl-button__ripple-container"><span class="mdl-ripple"></span></span></a>'
-                result_html += '</div>'
-            result_html += '</div>'
+            result_html += render_template('user_block.html', **item, title_style=title_style)
+
     return result_html
