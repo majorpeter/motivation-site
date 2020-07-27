@@ -122,6 +122,7 @@ class Tasks:
             'all_projects_url': self._config['url'] + 'projects',
         }
         vars.update(self.get_chart_contributions_vars(use_cached=True))
+        vars.update(self.get_chart_open_closed_timeline_vars(use_cached=True))
         return render_template('tasks.html', **vars)
 
     def get_chart_contributions_vars(self, range_days=365, use_cached=False):
@@ -171,15 +172,21 @@ class Tasks:
     def render_chart_contributions(self, range_days=365):
         return render_template('tasks_contributions.html', **self.get_chart_contributions_vars(range_days=range_days))
 
-    def render_chart_open_closed_timeline(self):
+    def get_chart_open_closed_timeline_vars(self, use_cached=False):
+        if not use_cached and not self._cached_data.is_up_to_date():
+            self._cached_data.update()
+
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)
-        variables = {
+        return {
             'dates': [str(k) for k in open_closed_timeline.keys()],
             'open': [v['opened'] - v['closed'] for k, v in open_closed_timeline.items()],
             'closed': [v['closed'] for k, v in open_closed_timeline.items()],
             'total': [v['opened'] for k, v in open_closed_timeline.items()],
+            'open_close_need_update': not self._cached_data.is_up_to_date()
         }
-        return render_template('tasks_open_closed_timeline.html', **variables)
+
+    def render_chart_open_closed_timeline(self, use_cached=False):
+        return render_template('tasks_open_closed_timeline.html', **self.get_chart_open_closed_timeline_vars(use_cached=use_cached))
 
     def issue_by_state_listing_url(self, state_id):
         #TODO nicer solution :/
