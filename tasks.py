@@ -150,7 +150,7 @@ class Tasks:
         journal = copy(self._cached_data.contributions)
         end_date = date.today()
         _date = end_date - timedelta(days=range_days)
-        _date -= timedelta(days=_date.weekday())  # find Monday in that week
+        _date += timedelta(days=7 - _date.weekday())  # find Monday in that week
         calendar = []
         sum = 0
         while _date <= end_date:
