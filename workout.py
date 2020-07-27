@@ -51,7 +51,11 @@ class Workout:
         while i >= 0:
             count = 0
             for j in range(i, -1, -1):
-                day_earlier = time.strptime(entries[j][0], self._config['date_format'])
+                try:
+                    day_earlier = time.strptime(entries[j][0], self._config['date_format'])
+                except ValueError:
+                    i -= 1
+                    continue  # skip cells that cannot be parsed
                 delta_sec = time.mktime(date) - time.mktime(day_earlier)
                 delta_day = int(delta_sec / 24 / 3600)
                 if delta_day >= days_range:
