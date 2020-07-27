@@ -177,6 +177,14 @@ class Tasks:
             self._cached_data.update()
 
         open_closed_timeline = copy(self._cached_data.open_closed_timeline)
+
+        # check whether the last change was a long time ago, add today with the same values to fix the graph
+        if len(open_closed_timeline.keys()) > 0:
+            day_of_last_change = sorted(open_closed_timeline.keys())[-1]
+            days_since_last_change = (date.today() - day_of_last_change).days
+            if days_since_last_change > 0:
+                open_closed_timeline[date.today()] = open_closed_timeline[day_of_last_change]
+
         return {
             'dates': [str(k) for k in open_closed_timeline.keys()],
             'open': [v['opened'] - v['closed'] for k, v in open_closed_timeline.items()],
