@@ -1,5 +1,6 @@
 # title: 'Motivational Site' # optionally override title
 locale: 'en'
+date_format: '%Y.%m.%d.' # for strftime() calls
 
 workout:
   sheet_id:  "" # from google spreadsheet URL (part between https://docs.google.com/spreadsheets/d/ and /edit#gid=...)

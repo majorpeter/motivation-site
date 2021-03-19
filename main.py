@@ -25,6 +25,7 @@ if 'workout' in config:
     _workout = Workout(config['workout'])
 _tasks = None
 if 'redmine' in config:
+    config['redmine']['date_format'] = config['date_format']  # copy from global
     _tasks = Tasks(config['redmine'])
 
 

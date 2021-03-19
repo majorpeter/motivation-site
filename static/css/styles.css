@@ -219,6 +219,11 @@ table#workout-cal td.today {
     font-size: 0.9em;
     margin-right: 0.3em;
 }
+#issues-closed span.closed-date {
+    float: right;
+    margin-top: 0.5em;
+    font-style: italic;
+}
 
 #contributions-container {
     overflow-x: hidden;

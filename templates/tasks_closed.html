@@ -1,4 +1,5 @@
 {% if parent_subject %}
 <a class="parent" href="{{ parent_url }}" target="_blank">{{ parent_subject }}</a>
 {% endif %}
-<a href="{{ url }}" target="_blank"><code>{{ id }}</code>{{ subject }}</a>
+<a href="{{ url }}" target="_blank"><code>#{{ id }}</code>{{ subject }}</a>
+<span class="closed-date">{{ closed_date }}</span>

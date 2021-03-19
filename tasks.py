@@ -90,6 +90,7 @@ class Tasks:
                         'id': issue.id,
                         'subject': issue.subject,
                         'url': self._config['url'] + 'issues/' + str(issue.id),
+                        'closed_date': issue.closed_on.strftime(self._config['date_format']),
                         'parent_subject': parent.subject if parent else None,
                         'parent_url': self._config['url'] + 'issues/' + str(parent.id) if parent else None,
                     })
