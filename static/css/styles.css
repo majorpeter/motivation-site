@@ -184,6 +184,42 @@ table#workout-cal td.today {
     background-color: rgba(6, 59, 179, 0.25);
 }
 
+#issues-closed {
+    display: table;
+}
+
+#issues-closed > div {
+    display: table-cell;
+    height: 140px;
+    vertical-align: middle;
+}
+
+#issues-closed > div > div {
+    display: table;
+    margin: auto;
+}
+
+#issues-closed a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    font-weight: inherit;
+}
+
+#issues-closed a.parent {
+    font-size: 0.8em;
+    margin-bottom: 0.5em;
+}
+
+#issues-closed a > code {
+    background: rgb(83,109,254);
+    padding: 2px 5px;
+    border-radius: 50px;
+    color: rgb(255, 255, 255);
+    font-size: 0.9em;
+    margin-right: 0.3em;
+}
+
 #contributions-container {
     overflow-x: hidden;
     max-width: 860px;

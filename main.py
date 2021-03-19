@@ -71,6 +71,9 @@ def workout_chart_get():
 def workout_calendar_get():
     return _workout.render_calendar_content()
 
+@app.route('/tasks-closed')
+def tasks_closed_get():
+    return _tasks.render_random_closed_task()
 
 @app.route('/tasks-open-closed')
 def tasks_open_closed_get():

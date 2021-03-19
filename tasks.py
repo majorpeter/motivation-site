@@ -1,3 +1,4 @@
+import random
 import time
 from copy import copy
 from datetime import date, timedelta
@@ -24,6 +25,7 @@ class Tasks:
             self.open_closed_timeline = {}
             self.contributions = {}
             self.issues_in_progress = []
+            self.issues_closed = []
 
         def update(self):
             with self._update_lock:  # fields can still be taken but the lock has to be used when invoking update
@@ -31,6 +33,7 @@ class Tasks:
                     return  # if another request already triggered the update recently, this call can be skipped
                 self._update_contributions_and_open_closed_timeline()
                 self._update_issues_in_progress()
+                self._update_issues_closed()
 
                 self._last_updated = time.localtime()
 
@@ -77,6 +80,27 @@ class Tasks:
                     })
             self.issues_in_progress = issues
 
+        def _update_issues_closed(self):
+            issues = []
+            if 'closed_id' in self._config:
+                issue_state = self._redmine.issue_status.get(self._config['closed_id'])
+                for issue in issue_state.issues:
+                    parent = self._redmine.issue.get(issue.parent.id) if hasattr(issue, 'parent') else None
+                    issues.append({
+                        'id': issue.id,
+                        'subject': issue.subject,
+                        'url': self._config['url'] + 'issues/' + str(issue.id),
+                        'parent_subject': parent.subject if parent else None,
+                        'parent_url': self._config['url'] + 'issues/' + str(parent.id) if parent else None,
+                    })
+            self.issues_closed = issues
+
+        def get_random_closed_issue(self):
+            with self._update_lock:
+                if len(self.issues_closed) > 0:
+                    return copy(random.choice(self.issues_closed))
+            return None
+
         def is_up_to_date(self, max_age=1800):
             if self._last_updated is None:
                 return False
@@ -89,6 +113,12 @@ class Tasks:
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
         self._cached_data = Tasks.CachedData(config)
         self._cached_data.update()  # update at init (may take long)
+
+    def render_random_closed_task(self):
+        issue = self._cached_data.get_random_closed_issue()
+        if issue:
+            return render_template('tasks_closed.html', **issue)
+        return gettext('No closed issues found')
 
     def render_chart_states(self):
         states = self._redmine.issue_status.all()

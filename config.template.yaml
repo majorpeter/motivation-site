@@ -11,6 +11,7 @@ redmine:
   api_key: '' # enable REST API and copy key from user account page
   contributions_and_timeline: true  # enable contributions calendar and open/closed timeline
   in_progress_id: 2 # issue_status id for 'In Progress'
+  closed_id: 2 # issue_status id for 'Closed'
   issue_state_colors:
     1: '#839fd4ad'
     2: '#ffbf00c2'
