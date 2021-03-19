@@ -11,6 +11,7 @@
             </div>
         </div>
     </div>
+    {% if contrib_calendar %}
     <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--12-col">
             <h2 class="mdl-card__title-text">{{ _('Contributions') }}</h2>
@@ -27,6 +28,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <div class="mdl-card__actions mdl-card--border">
         <a href="{{ all_issues_url }}" target="_blank" class="mdl-button mdl-js-button mdl-js-ripple-effect">
             <i class="material-icons">assignment</i>

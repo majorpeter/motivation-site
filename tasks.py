@@ -35,34 +35,35 @@ class Tasks:
                 self._last_updated = time.localtime()
 
         def _update_contributions_and_open_closed_timeline(self):
-            creation_dates = []
-            close_dates = []
-            journal_dates = []
-            issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
-            for issue in issues:
-                creation_dates.append(issue.created_on.date())
-                try:
-                    close_dates.append(issue.closed_on.date())
-                except ResourceAttrError:
-                    pass  # not closed yet
+            if 'contributions_and_timeline' in self._config and self._config['contributions_and_timeline']:
+                creation_dates = []
+                close_dates = []
+                journal_dates = []
+                issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
+                for issue in issues:
+                    creation_dates.append(issue.created_on.date())
+                    try:
+                        close_dates.append(issue.closed_on.date())
+                    except ResourceAttrError:
+                        pass  # not closed yet
 
-                for journal in issue.journals:
-                    journal_dates.append(journal.created_on.date())
+                    for journal in issue.journals:
+                        journal_dates.append(journal.created_on.date())
 
-            # walk through dates to recreate open/closed timeline
-            open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
-            open_closed_timeline = {}
-            opened = 0
-            closed = 0
-            from_date = date.today() - timedelta(days=365)  # only care about the last year
-            for _date in open_closed_timeline_dates:
-                opened += creation_dates.count(_date)
-                closed += close_dates.count(_date)
-                if _date >= from_date:
-                    open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
+                # walk through dates to recreate open/closed timeline
+                open_closed_timeline_dates = sorted(list(set(creation_dates + close_dates)))
+                open_closed_timeline = {}
+                opened = 0
+                closed = 0
+                from_date = date.today() - timedelta(days=365)  # only care about the last year
+                for _date in open_closed_timeline_dates:
+                    opened += creation_dates.count(_date)
+                    closed += close_dates.count(_date)
+                    if _date >= from_date:
+                        open_closed_timeline[_date] = {'opened': opened, 'closed': closed}
 
-            self.open_closed_timeline = open_closed_timeline
-            self.contributions = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
+                self.open_closed_timeline = open_closed_timeline
+                self.contributions = {_date: journal_dates.count(_date) for _date in set(journal_dates)}
 
         def _update_issues_in_progress(self):
             issues = []
@@ -87,6 +88,7 @@ class Tasks:
         self._config = config
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
         self._cached_data = Tasks.CachedData(config)
+        self._cached_data.update()  # update at init (may take long)
 
     def render_chart_states(self):
         states = self._redmine.issue_status.all()
@@ -121,8 +123,9 @@ class Tasks:
             'all_issues_url': self._config['url'] + 'issues',
             'all_projects_url': self._config['url'] + 'projects',
         }
-        vars.update(self.get_chart_contributions_vars(use_cached=True))
-        vars.update(self.get_chart_open_closed_timeline_vars(use_cached=True))
+        if 'contributions_and_timeline' in self._config and self._config['contributions_and_timeline']:
+            vars.update(self.get_chart_contributions_vars(use_cached=True))
+            vars.update(self.get_chart_open_closed_timeline_vars(use_cached=True))
         return render_template('tasks.html', **vars)
 
     def get_chart_contributions_vars(self, range_days=365, use_cached=False):
