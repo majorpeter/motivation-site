@@ -19,14 +19,15 @@ with open('config.yaml', 'r') as f:
 locale = config['locale'] if 'locale' in config else 'en'
 babel = Babel(app, default_locale=locale)
 
-_agenda = Agenda()
-_workout = None
-if 'workout' in config:
-    _workout = Workout(config['workout'])
-_tasks = None
-if 'redmine' in config:
-    config['redmine']['date_format'] = config['date_format']  # copy from global
-    _tasks = Tasks(config['redmine'])
+with app.app_context():  # this is required to have translations in loading functions
+    _agenda = Agenda()
+    _workout = None
+    if 'workout' in config:
+        _workout = Workout(config['workout'])
+    _tasks = None
+    if 'redmine' in config:
+        config['redmine']['date_format'] = config['date_format']  # copy from global
+        _tasks = Tasks(config['redmine'])
 
 
 @app.route('/')
