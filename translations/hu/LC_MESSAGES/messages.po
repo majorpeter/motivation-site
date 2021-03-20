@@ -245,7 +245,7 @@ msgstr "Összes projekt"
 msgid "%(num)d contribution in the last year"
 msgid_plural "%(num)d contributions in the last year"
 msgstr[0] "%(num)d hozzájárulás az elmúlt évben"
-msgstr[1] ""
+msgstr[1] "%(num)d hozzájárulás az elmúlt évben"
 
 #: templates/tasks_contributions.html:19
 msgid " contributions(s) on "
