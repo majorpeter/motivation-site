@@ -2,11 +2,7 @@ function periodicallyReload(e) {
     $.get($(e).data('url'), function(data) {
         $(e).fadeOut(800, function() {
             $(e).html(data);
-            $(e).fadeIn(400, function() {
-                setTimeout(function() {
-                    periodicallyReload(e);  // reschedule self
-                }, $(e).data('period'));
-            });
+            $(e).fadeIn(400);
         });
     });
 }
@@ -17,7 +13,7 @@ $(document).ready(function() {
             $(e).html(data);
         });
         if ($(e).data('period')) {
-            setTimeout(function() {
+            setInterval(function() {
                 periodicallyReload(e);
             }, $(e).data('period'));
         }
