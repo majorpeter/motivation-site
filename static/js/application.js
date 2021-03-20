@@ -1,6 +1,6 @@
 function periodicallyReload(e) {
-    $(e).fadeOut(800, function() {
-        $.get($(e).data('url'), function(data) {
+    $.get($(e).data('url'), function(data) {
+        $(e).fadeOut(800, function() {
             $(e).html(data);
             $(e).fadeIn(400, function() {
                 setTimeout(function() {
