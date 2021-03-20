@@ -1,18 +1,24 @@
 import random
 import time
 from copy import copy
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from threading import Lock
 from typing import NamedTuple
 
 import redminelib
 from flask import render_template
-from flask_babel import gettext
+from flask_babel import gettext, ngettext
 from redminelib.exceptions import ResourceAttrError
 
 
 class Tasks:
     OPEN_CLOSED_ID = 'tasks-open-closed'
+    IN_PROGRESS_DAY_COLORS = {
+        0: '#cccccc',
+        4: '#7d7d7d',
+        10: '#ff9f24',
+        20: '#ff2424',
+    }
 
     class CachedData:
         def __init__(self, config):
@@ -73,12 +79,17 @@ class Tasks:
             if 'in_progress_id' in self._config:
                 issue_state = self._redmine.issue_status.get(self._config['in_progress_id'])
                 for issue in issue_state.issues:
+                    days_since_update = (datetime.now() - issue.updated_on).days
                     issues.append({
                         'subject': issue.subject,
                         'url': self._config['url'] + 'issues/' + str(issue.id),
-                        'done_ratio': issue.done_ratio
+                        'done_ratio': issue.done_ratio,
+                        'updated': issue.updated_on,
+                        'days_since_update': ngettext('{num} day ago', '{num} days ago', days_since_update).format(
+                            num=days_since_update) if days_since_update > 0 else None,
+                        'days_since_update_color': Tasks.IN_PROGRESS_DAY_COLORS[max(k for k in Tasks.IN_PROGRESS_DAY_COLORS if k <= days_since_update)],
                     })
-            self.issues_in_progress = issues
+            self.issues_in_progress = sorted(issues, key=lambda x: x['updated'])
 
         def _update_issues_closed(self):
             issues = []

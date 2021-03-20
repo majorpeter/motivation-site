@@ -7,12 +7,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-03-19 21:14+0100\n"
+"POT-Creation-Date: 2021-03-20 18:53+0100\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
 "Language-Team: hu <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=2; plural=n != 1\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -133,31 +133,37 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:40
+#: main.py:42
 msgid "Quote of the day"
 msgstr "Napi idézet"
 
-#: main.py:43 templates/agenda.html:3
+#: main.py:45 templates/agenda.html:3
 msgid "Agenda"
 msgstr "Események"
 
-#: main.py:47 templates/workout.html:4
+#: main.py:49 templates/workout.html:4
 msgid "Workout Chart"
 msgstr "Edzés Grafikon"
 
-#: main.py:51 templates/tasks.html:14
+#: main.py:53 templates/tasks.html:14
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
-#: main.py:54
+#: main.py:56
 msgid "Motivational Site"
 msgstr "Motivációs Oldal"
 
-#: tasks.py:121
+#: tasks.py:88
+msgid "{num} day ago"
+msgid_plural "{num} days ago"
+msgstr[0] "{num} napja"
+msgstr[1] "{num} napja"
+
+#: tasks.py:133
 msgid "No closed issues found"
 msgstr "Nem található lezárt feladat"
 
-#: tasks.py:140
+#: tasks.py:152
 #, python-format
 msgid "%s issues are closed."
 msgstr "%s lezárt feladat."
@@ -239,12 +245,21 @@ msgstr "Összes projekt"
 msgid "%(num)d contribution in the last year"
 msgid_plural "%(num)d contributions in the last year"
 msgstr[0] "%(num)d hozzájárulás az elmúlt évben"
+msgstr[1] ""
 
 #: templates/tasks_contributions.html:19
 msgid " contributions(s) on "
 msgstr " hozzájárulás ezen a napon: "
 
-#: templates/tasks_in_progress.html:10
+#: templates/tasks_in_progress.html:6
+msgid "Done Ratio"
+msgstr "Készültség aránya"
+
+#: templates/tasks_in_progress.html:7
+msgid "Last Updated:"
+msgstr "Legutóbbi változás:"
+
+#: templates/tasks_in_progress.html:13
 msgid "No issues found in progress."
 msgstr "Nincsenek folyamatban lévő feladatok."
 

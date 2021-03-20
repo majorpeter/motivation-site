@@ -1,7 +1,10 @@
 {% if issues_in_progress %}
 <ul>
 {% for i in issues_in_progress %}
-    <li><a href="{{ i.url }}" target="_blank">{{ i.subject }}</a>{% if i.done_ratio %}<sub>({{ i.done_ratio }}%)</sub>{% endif %}
+    <li>
+        <a href="{{ i.url }}" target="_blank">{{ i.subject }}</a>
+        {% if i.done_ratio %}<sub title="{% trans %}Done Ratio{% endtrans %}">{{ i.done_ratio }}%</sub>{% endif %}
+        {% if i.days_since_update %}<sub title="{% trans %}Last Updated:{% endtrans %}&#x0a;{{ i.updated|e }}" style="color: {{ i.days_since_update_color }}">{{ i.days_since_update }}</sub>{% endif %}
     </li>
 {% endfor %}
 </ul>
