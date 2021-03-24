@@ -63,7 +63,11 @@ class Workout:
                 count += 1
 
             if entries[i][0] == date_str:
-                data = {'date': date_str, 'count': count, 'workout_day': True, 'weight': float(entries[i][1])}
+                try:
+                    weight = float(entries[i][1])
+                except IndexError:
+                    weight = 0
+                data = {'date': date_str, 'count': count, 'workout_day': True, 'weight': weight}
                 i -= 1
             else:
                 data = {'date': date_str, 'count': count, 'workout_day': False}
