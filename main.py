@@ -77,9 +77,10 @@ def workout_calendar_get():
 def tasks_closed_get():
     return _tasks.render_random_closed_task()
 
-@app.route('/tasks-open-closed')
-def tasks_open_closed_get():
-    return _tasks.render_chart_states()
+
+@app.route('/tasks-states')
+def tasks_states_data_get():
+    return _tasks.get_chart_states_data()
 
 
 @app.route('/tasks-in-progress')

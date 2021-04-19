@@ -1,4 +1,4 @@
-<p>{{ message | safe }}</p>
+<p id="tasks-state-chart-message">{{ states_message | safe }}</p>
 
 <div id="tasks-chart-container" style="">
     <canvas id="tasks-open-closed-chart-canvas"></canvas>
@@ -13,11 +13,11 @@ var myPieChart = new Chart(ctx, {
     type: 'pie',
         data: {
         datasets: [{
-            data: {{ counts | tojson }},
-            urls: {{ urls | tojson }},
-            backgroundColor: {{ backgrounds | tojson }}
+            data: {{ states_counts | tojson }},
+            urls: {{ states_urls | tojson }},
+            backgroundColor: {{ states_backgrounds | tojson }}
         }],
-        labels: {{ names | tojson }},
+        labels: {{ states_names | tojson }},
     },
     options: {
         responsive: true,
@@ -41,5 +41,23 @@ $('#tasks-open-closed-chart-canvas').click(function(evt){
         var index = activePoints[0]._index;
         window.open(myPieChart.data.datasets[0].urls[index]);
     }
+});
+
+// update states chart if changed since cached version
+$(document).ready(function() {
+    $.get('{{ url_for('tasks_states_data_get') }}', function(data) {
+        if (JSON.stringify(myPieChart.data.datasets[0].data) != JSON.stringify(data.states_counts)) {   // only update if changed
+            myPieChart.data = {
+                datasets: [{
+                    data: data.states_counts,
+                    urls: data.states_urls,
+                    backgroundColor: data.states_backgrounds
+                }],
+                labels: data.states_names
+            };
+            myPieChart.update();
+            $('p#tasks-state-chart-message').html(data.states_message);
+        }
+    });
 });
 </script>

@@ -32,14 +32,17 @@ class Tasks:
             self.contributions = {}
             self.issues_in_progress = []
             self.issues_closed = []
+            self.issue_states_data = {}
 
         def update(self):
             with self._update_lock:  # fields can still be taken but the lock has to be used when invoking update
                 if self.is_up_to_date(max_age=10):
                     return  # if another request already triggered the update recently, this call can be skipped
+
                 self._update_contributions_and_open_closed_timeline()
                 self._update_issues_in_progress()
                 self._update_issues_closed()
+                self.update_issue_states_data()
 
                 self._last_updated = time.localtime()
 
@@ -107,6 +110,28 @@ class Tasks:
                     })
             self.issues_closed = issues
 
+        def update_issue_states_data(self):
+            states = self._redmine.issue_status.all()
+            names = []
+            counts = []
+            urls = []
+            backgrounds = []
+            closed_count = 0
+
+            for state in states:
+                if len(state.issues) > 0:
+                    names.append(state.name)
+                    counts.append(len(state.issues))
+                    urls.append(self.issue_by_state_listing_url(state.id))
+                    backgrounds.append(self._get_background_color_for_issue_state(state.id))
+                if state.is_closed:
+                    closed_count += len(state.issues)
+            total_count = sum(counts)
+            self.issue_states_data = {
+                'states_names': names, 'states_counts': counts, 'states_urls': urls, 'states_backgrounds': backgrounds,
+                'states_message': gettext('%s issues are closed.') % ('<strong>%d/%d</strong>' % (closed_count, total_count))
+               }
+
         def get_random_closed_issue(self):
             with self._update_lock:
                 if len(self.issues_closed) > 0:
@@ -120,6 +145,17 @@ class Tasks:
                 return False
             return True
 
+        def issue_by_state_listing_url(self, state_id):
+            #TODO nicer solution :/
+            return self._config['url'] + 'issues?utf8=✓&set_filter=1&sort=id%3Adesc&f%5B%5D=status_id&op%5Bstatus_id%5D=%3D&v%5Bstatus_id%5D%5B%5D=' + str(state_id) + '&f%5B%5D='
+
+        def _get_background_color_for_issue_state(self, state_id):
+            if 'issue_state_colors' in self._config:
+                if state_id in self._config['issue_state_colors']:
+                    return self._config['issue_state_colors'][state_id]
+            # fall back to default from chartjs
+            return '#0000001A'
+
     def __init__(self, config):
         self._config = config
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
@@ -132,26 +168,10 @@ class Tasks:
             return render_template('tasks_closed.html', **issue)
         return gettext('No closed issues found')
 
-    def render_chart_states(self):
-        states = self._redmine.issue_status.all()
-        names = []
-        counts = []
-        urls = []
-        backgrounds = []
-        closed_count = 0
-
-        for state in states:
-            if len(state.issues) > 0:
-                names.append(state.name)
-                counts.append(len(state.issues))
-                urls.append(self.issue_by_state_listing_url(state.id))
-                backgrounds.append(self._get_background_color_for_issue_state(state.id))
-            if state.is_closed:
-                closed_count += len(state.issues)
-        total_count = sum(counts)
-        message = gettext('%s issues are closed.') % ('<strong>%d/%d</strong>' % (closed_count, total_count))
-        return render_template('tasks_states_chart_content.html', message=message, names=names, counts=counts, urls=urls,
-                               backgrounds=backgrounds)
+    def get_chart_states_data(self, use_cached=False):
+        if not use_cached:
+            self._cached_data.update_issue_states_data()
+        return self._cached_data.issue_states_data
 
     def render_in_progress_list_html(self):
         if not self._cached_data.is_up_to_date():
@@ -165,6 +185,7 @@ class Tasks:
             'all_issues_url': self._config['url'] + 'issues',
             'all_projects_url': self._config['url'] + 'projects',
         }
+        vars.update(self.get_chart_states_data(use_cached=True))
         if 'contributions_and_timeline' in self._config and self._config['contributions_and_timeline']:
             vars.update(self.get_chart_contributions_vars(use_cached=True))
             vars.update(self.get_chart_open_closed_timeline_vars(use_cached=True))
@@ -240,14 +261,3 @@ class Tasks:
 
     def render_chart_open_closed_timeline(self, use_cached=False):
         return render_template('tasks_open_closed_timeline.html', **self.get_chart_open_closed_timeline_vars(use_cached=use_cached))
-
-    def issue_by_state_listing_url(self, state_id):
-        #TODO nicer solution :/
-        return self._config['url'] + 'issues?utf8=✓&set_filter=1&sort=id%3Adesc&f%5B%5D=status_id&op%5Bstatus_id%5D=%3D&v%5Bstatus_id%5D%5B%5D=' + str(state_id) + '&f%5B%5D='
-
-    def _get_background_color_for_issue_state(self, state_id):
-        if 'issue_state_colors' in self._config:
-            if state_id in self._config['issue_state_colors']:
-                return self._config['issue_state_colors'][state_id]
-        # fall back to default from chartjs
-        return '#0000001A'
