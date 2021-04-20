@@ -1,0 +1,43 @@
+<dialog id="journal-edit-dialog" class="mdl-dialog" style="min-width: 60%">
+    <h4 class="mdl-dialog__title">{{ _('Journaling for Today') }}</h4>
+    <div class="mdl-dialog__content">
+        <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
+            <textarea class="mdl-textfield__input" rows="8" id="journal-edit-text"></textarea>
+            <label class="mdl-textfield__label" for="journal-edit-text">{{ _('Journal entries...') }}</label>
+        </div>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button save-btn">{{ _('Save') }}</button>
+        <button type="button" class="mdl-button close-btn">{{ _('Cancel') }}</button>
+    </div>
+</dialog>
+<script>
+function update_journal_box() {
+  $.get('{{ url_for('journal_box') }}', function(data) {
+    document.querySelector('#journaling').outerHTML = data;
+  });
+}
+
+function open_journal_editor() {
+  $.get('{{ url_for('journal_data_get_set') }}', function(data) {
+    var field = journal_edit_dialog.querySelector('#journal-edit-text');
+    field.value = data.entries.join('\n');
+    field.parentElement.MaterialTextfield.checkDirty();
+    journal_edit_dialog.showModal();
+  });
+}
+
+var journal_edit_dialog = document.querySelector('#journal-edit-dialog');
+journal_edit_dialog.querySelector('.close-btn').addEventListener('click', function() {
+  journal_edit_dialog.close();
+});
+journal_edit_dialog.querySelector('.save-btn').addEventListener('click', function() {
+  var field = journal_edit_dialog.querySelector('#journal-edit-text');
+  $.post('{{ url_for('journal_data_get_set') }}', {
+    entries: field.value.split('\n'),
+  }, function(data) {
+    journal_edit_dialog.close();
+    update_journal_box();
+  });
+});
+</script>

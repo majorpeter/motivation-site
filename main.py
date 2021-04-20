@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 import yaml
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
 
 import quotes
@@ -39,6 +39,9 @@ def index_page():
     navigation = []
 
     content_right += get_user_content_right()
+
+    content_right += _journaling.render_journal_cached() + render_template('journaling_static.html')
+    navigation.append(NavigationItem('journaling', gettext('Journal'), 'class'))
 
     content_right += quotes.quote()
     navigation.append(NavigationItem('quote-of-the-day', gettext('Quote of the day'), 'message'))
@@ -98,6 +101,18 @@ def tasks_contributions():
 @app.route('/tasks-open-closed-timeline')
 def tasks_open_closed_timeline():
     return _tasks.render_chart_open_closed_timeline()
+
+
+@app.route('/journal-data', methods=['GET', 'POST'])
+def journal_data_get_set():
+    if request.method == 'POST':
+        _journaling.entries_for_today = request.form.getlist('entries[]')
+    return _journaling.get_journal_data()
+
+
+@app.route('/journal')
+def journal_box():
+    return _journaling.render_journal_cached()
 
 
 app.run(host='0.0.0.0', debug=True, use_reloader=False)

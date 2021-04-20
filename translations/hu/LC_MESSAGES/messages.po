@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-03-20 18:53+0100\n"
+"POT-Creation-Date: 2021-04-20 23:11+0200\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -133,54 +133,58 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:42
+#: main.py:44 templates/journaling.html:3
+msgid "Journal"
+msgstr "Napló"
+
+#: main.py:47
 msgid "Quote of the day"
 msgstr "Napi idézet"
 
-#: main.py:45 templates/agenda.html:3
+#: main.py:50 templates/agenda.html:3
 msgid "Agenda"
 msgstr "Események"
 
-#: main.py:49 templates/workout.html:4
+#: main.py:54 templates/workout.html:4
 msgid "Workout Chart"
 msgstr "Edzés Grafikon"
 
-#: main.py:53 templates/tasks.html:14
+#: main.py:58 templates/tasks.html:14
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
-#: main.py:56
+#: main.py:61
 msgid "Motivational Site"
 msgstr "Motivációs Oldal"
 
-#: tasks.py:88
+#: tasks.py:91
 msgid "{num} day ago"
 msgid_plural "{num} days ago"
 msgstr[0] "{num} napja"
 msgstr[1] "{num} napja"
 
-#: tasks.py:133
-msgid "No closed issues found"
-msgstr "Nem található lezárt feladat"
-
-#: tasks.py:152
+#: tasks.py:132
 #, python-format
 msgid "%s issues are closed."
 msgstr "%s lezárt feladat."
 
-#: workout.py:95
+#: tasks.py:169
+msgid "No closed issues found"
+msgstr "Nem található lezárt feladat"
+
+#: workout.py:99
 msgid "Fetching data..."
 msgstr "Adatok letöltése..."
 
-#: workout.py:97
+#: workout.py:101
 msgid "You have worked out <strong>today</strong>, great job!"
 msgstr "Voltál <strong>ma</strong> edzeni, szép munka!"
 
-#: workout.py:99
+#: workout.py:103
 msgid "You have worked out <strong>yesterday</strong>."
 msgstr "Voltál edzeni <strong>tegnap</strong>."
 
-#: workout.py:101
+#: workout.py:105
 #, python-format
 msgid ""
 "You have worked out <strong>%d days ago</strong>, maybe it's time to hit "
@@ -189,21 +193,21 @@ msgstr ""
 "Ezelőtt <strong>%d nappal</strong> voltál edzeni, talán most már illene "
 "lemenni?"
 
-#: workout.py:103
+#: workout.py:107
 #, python-format
 msgid "You haven't worked out in <strong>%d days</strong>! Go training now!"
 msgstr "Nem edzettél már <strong>%d napja</strong>! Azonnal menj edzeni!"
 
-#: workout.py:122
+#: workout.py:126
 #, python-format
 msgid "%d workouts in the last week"
 msgstr "%d edzés az elmúlt héten"
 
-#: workout.py:123
+#: workout.py:127
 msgid "No data"
 msgstr "Nincs adat"
 
-#: workout.py:126
+#: workout.py:130
 #, python-format
 msgid "Your workout days in %d.%02d. so far:"
 msgstr "Edzésnapjaid %d.%02d. hónapban:"
@@ -215,6 +219,30 @@ msgstr "Naptár megnyitása"
 #: templates/agenda_content.html:2
 msgid "No upcoming events!"
 msgstr "Nincsenek közelgő események!"
+
+#: templates/journaling.html:11
+msgid "No journal entries found for Today!"
+msgstr "Nincsenek napló bejegyzések a mai napra!"
+
+#: templates/journaling.html:17
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: templates/journaling_static.html:2
+msgid "Journaling for Today"
+msgstr "Mai Napló"
+
+#: templates/journaling_static.html:6
+msgid "Journal entries..."
+msgstr "Napló bejegyzések..."
+
+#: templates/journaling_static.html:10
+msgid "Save"
+msgstr "Mentés"
+
+#: templates/journaling_static.html:11
+msgid "Cancel"
+msgstr "Mégse"
 
 #: templates/tasks.html:4
 msgid "Closed Issues"

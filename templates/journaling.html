@@ -1,0 +1,20 @@
+<div id="journaling" class="mdl-color--white mdl-shadow--2dp">
+    <div class="mdl-card__supporting-text">
+        <h2 class="mdl-card__title-text" style="color: {{ color }};"><i class="material-icons">class</i>&nbsp;{{ _('Journal') }}</h2>
+        {% if entries %}
+        <ul>
+            {% for entry in entries %}
+            <li>{{ entry }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <h6>{{ _('No journal entries found for Today!') }}</h6>
+        {% endif %}
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+        <a href="#" onclick="open_journal_editor(); return false;" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+            <i class="material-icons">edit</i>
+            {{ _('Edit') }}
+        </a>
+    </div>
+</div>

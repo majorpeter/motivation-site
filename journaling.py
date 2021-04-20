@@ -1,10 +1,13 @@
 import io
 from datetime import datetime, date
 
+from flask import render_template
 from webdav3.client import Client as WebDavClient
 
 
 class Journaling:
+    REQUIRED = 3
+
     def __init__(self, config):
         self._config = config
         self._modified_date = None
@@ -15,7 +18,6 @@ class Journaling:
             'webdav_password': self._config['dav']['password']
         })
         self._fetch_journal()
-        print(self.entries_for_today)
 
     def _fetch_journal(self):
         modified_date = self._client.info(self._config['dav']['path'])['modified']
@@ -42,6 +44,10 @@ class Journaling:
     @property
     def entries_for_today(self):
         return self.get_entries_for_day(date.today(), strip_listing=True)
+
+    @entries_for_today.setter
+    def entries_for_today(self, entries):
+        self.set_entries_for_day(date.today(), entries, prepend_listing=True)
 
     def get_entries_for_day(self, day: date, strip_listing: bool):
         in_day = False
@@ -87,3 +93,15 @@ class Journaling:
             result += self.__create_day_entry(day, content, prepend_listing)
         self._journal = result[:-1]  # drop last new line char
         self._save_journal()
+
+    def render_journal_cached(self):
+        return render_template('journaling.html', **self.get_journal_data())
+
+    def get_journal_data(self):
+        entries = self.entries_for_today
+        color = '#ff4242'
+        if len(entries) >= Journaling.REQUIRED:
+            color = '#7ed67e'
+        elif len(entries) > 0:
+            color = '#fb962c'
+        return {'entries': entries, 'color': color}
