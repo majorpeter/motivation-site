@@ -6,6 +6,7 @@ from flask_babel import Babel, gettext
 
 import quotes
 from agenda import Agenda
+from journaling import Journaling
 from tasks import Tasks
 from user import get_user_content_right
 from workout import Workout
@@ -21,6 +22,7 @@ babel = Babel(app, default_locale=locale)
 
 with app.app_context():  # this is required to have translations in loading functions
     _agenda = Agenda()
+    _journaling = Journaling(config['journaling'])
     _workout = None
     if 'workout' in config:
         _workout = Workout(config['workout'])

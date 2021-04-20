@@ -18,3 +18,12 @@ redmine:
     2: '#ffbf00c2'
     5: '#00ce25ad'
     6: '#00901aad'
+
+journaling:
+  dav:
+    hostname: 'https://example.com/remote.php/dav/files/username'  # e.g. for NextCloud share
+    login: 'username'
+    password: 'password'
+    path: 'location-of-my-journal.md'
+  day_prefix: '### '
+  date_format: '%Y.%m.%d.'
