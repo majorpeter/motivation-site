@@ -21,7 +21,9 @@ redmine:
 
 journaling:
   dav:
-    hostname: 'https://example.com/remote.php/dav/files/username'  # e.g. for NextCloud share
+    hostname: 'example.com'
+    protocol: 'https'
+    baseurl: 'remote.php/dav/files/username/'  # e.g. for NextCloud share
     login: 'username'
     password: 'password'
     path: 'location-of-my-journal.md'

@@ -1,8 +1,8 @@
 import io
 from datetime import datetime, date
 
+import easywebdav2
 from flask import render_template
-from webdav3.client import Client as WebDavClient
 
 
 class Journaling:
@@ -12,24 +12,21 @@ class Journaling:
         self._config = config
         self._modified_date = None
         self._journal = ''
-        self._client = WebDavClient({
-            'webdav_hostname': self._config['dav']['hostname'],
-            'webdav_login': self._config['dav']['login'],
-            'webdav_password': self._config['dav']['password']
-        })
+        self._client = easywebdav2.Client(self._config['dav']['hostname'], protocol=config['dav']['protocol'],
+                                         username=self._config['dav']['login'],
+                                         password=self._config['dav']['password'])
         self._fetch_journal()
 
     def _fetch_journal(self):
-        modified_date = self._client.info(self._config['dav']['path'])['modified']
-        if self._modified_date != modified_date:
-            buffer = io.BytesIO()
-            self._client.download_from(buffer, remote_path=self._config['dav']['path'])
-            self._journal = buffer.getvalue().decode('utf8')
-            self._modified_date = modified_date
+        buffer = io.BytesIO()
+        self._client.download(remote_path=self._config['dav']['baseurl'] + self._config['dav']['path'],
+                              local_path_or_fileobj=buffer)
+        self._journal = buffer.getvalue().decode('utf8')
 
     def _save_journal(self):
         buffer = io.BytesIO(self._journal.encode('utf8'))
-        self._client.upload_to(buffer, remote_path=self._config['dav']['path'])
+        self._client.upload(remote_path=self._config['dav']['baseurl'] + self._config['dav']['path'],
+                            local_path_or_fileobj=buffer)
         self._modified_date = None
 
     @property
