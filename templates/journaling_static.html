@@ -6,6 +6,7 @@
             <label class="mdl-textfield__label" for="journal-edit-text">{{ _('Journal entries...') }}</label>
         </div>
     </div>
+    <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
     <div class="mdl-dialog__actions">
         <button type="button" class="mdl-button save-btn">{{ _('Save') }}</button>
         <button type="button" class="mdl-button close-btn">{{ _('Cancel') }}</button>
@@ -21,8 +22,10 @@ function update_journal_box() {
 function open_journal_editor() {
   $.get('{{ url_for('journal_data_get_set') }}', function(data) {
     var field = journal_edit_dialog.querySelector('#journal-edit-text');
+    field.readOnly = false;
     field.value = data.entries.join('\n');
     field.parentElement.MaterialTextfield.checkDirty();
+    $(journal_edit_dialog).removeClass('saving');
     journal_edit_dialog.showModal();
   });
 }
@@ -33,6 +36,8 @@ journal_edit_dialog.querySelector('.close-btn').addEventListener('click', functi
 });
 journal_edit_dialog.querySelector('.save-btn').addEventListener('click', function() {
   var field = journal_edit_dialog.querySelector('#journal-edit-text');
+  field.readOnly = true;
+  $(journal_edit_dialog).addClass('saving');
   $.post('{{ url_for('journal_data_get_set') }}', {
     entries: field.value.split('\n'),
   }, function(data) {

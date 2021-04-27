@@ -242,3 +242,15 @@ table#workout-cal td.today {
     font-size: 9px;
     color: rgba(0,0,0,.54);
 }
+
+dialog#journal-edit-dialog div.mdl-progress {
+    display: none;
+    width: 100%;
+}
+
+dialog#journal-edit-dialog.saving div.mdl-progress {
+    display: block;
+}
+dialog#journal-edit-dialog.saving div.mdl-dialog__actions {
+    display: none;
+}
