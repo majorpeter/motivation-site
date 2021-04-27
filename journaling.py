@@ -91,7 +91,9 @@ class Journaling:
         self._journal = result[:-1]  # drop last new line char
         self._save_journal()
 
-    def render_journal_cached(self):
+    def render_journal(self, update_from_server=False):
+        if update_from_server:
+            self._fetch_journal()
         return render_template('journaling.html', **self.get_journal_data())
 
     def get_journal_data(self):

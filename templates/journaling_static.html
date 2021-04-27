@@ -13,8 +13,8 @@
     </div>
 </dialog>
 <script>
-function update_journal_box() {
-  $.get('{{ url_for('journal_box') }}', function(data) {
+function update_journal_box(update = false) {
+  $.get('{{ url_for('journal_box') }}', {update: update}, function(data) {
     document.querySelector('#journaling').outerHTML = data;
   });
 }
@@ -28,6 +28,9 @@ function open_journal_editor() {
     $(journal_edit_dialog).removeClass('saving');
     journal_edit_dialog.showModal();
   });
+
+  // also start a background update from remote server
+  update_journal_box(true);
 }
 
 var journal_edit_dialog = document.querySelector('#journal-edit-dialog');

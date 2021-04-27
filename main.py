@@ -40,7 +40,7 @@ def index_page():
 
     content_right += get_user_content_right()
 
-    content_right += _journaling.render_journal_cached() + render_template('journaling_static.html')
+    content_right += _journaling.render_journal() + render_template('journaling_static.html')
     navigation.append(NavigationItem('journaling', gettext('Journal'), 'class'))
 
     content_right += quotes.quote()
@@ -112,7 +112,7 @@ def journal_data_get_set():
 
 @app.route('/journal')
 def journal_box():
-    return _journaling.render_journal_cached()
+    return _journaling.render_journal(update_from_server=request.args.get('update') == 'true')
 
 
 app.run(host='0.0.0.0', debug=True, use_reloader=False)
