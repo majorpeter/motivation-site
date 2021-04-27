@@ -96,9 +96,10 @@ class Journaling:
 
     def get_journal_data(self):
         entries = self.entries_for_today
+        done_percent = int(len(entries) / Journaling.REQUIRED * 100)
         color = '#ff4242'
         if len(entries) >= Journaling.REQUIRED:
             color = '#7ed67e'
         elif len(entries) > 0:
             color = '#fb962c'
-        return {'entries': entries, 'color': color}
+        return {'entries': entries, 'done_percent': done_percent, 'color': color}
