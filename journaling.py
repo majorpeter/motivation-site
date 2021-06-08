@@ -104,21 +104,30 @@ class Journaling:
             return '#fb962c'
         return '#ff4242'
 
-    def get_journal_data(self):
-        entries = self.entries_for_today
+    def get_journal_data(self, days_before=None):
+        day = date.today() if not days_before else date.today() - timedelta(days=days_before)
+        entries = self.get_entries_for_day(day, strip_listing=True)
         done_percent = int(len(entries) / Journaling.REQUIRED * 100)
+
         days = []
-        for i in range(7, 0, -1):
-            day = date.today() - timedelta(days=i)
-            entries_count = len(self.get_entries_for_day(day, strip_listing=True))
-            days.append({
-                'day': day.strftime(self._config['date_format']),
-                'count': entries_count,
-                'color': Journaling.color_for_count(entries_count)
-            })
+        if not days_before:
+            for i in range(7, 0, -1):
+                day = date.today() - timedelta(days=i)
+                entries_count = len(self.get_entries_for_day(day, strip_listing=True))
+                days.append({
+                    'day': day.strftime(self._config['date_format']),
+                    'count': entries_count,
+                    'color': Journaling.color_for_count(entries_count),
+                    'days_before': i,
+                })
         return {
             'entries': entries,
             'done_percent': done_percent,
             'color': Journaling.color_for_count(len(entries)),
+            'day': day.strftime(self._config['date_format']),
             'days': days
         }
+
+    def set_journal_data(self, entries, days_before=None):
+        day = date.today() if not days_before else date.today() - timedelta(days=days_before)
+        self.set_entries_for_day(day=day, content=entries, prepend_listing=True)

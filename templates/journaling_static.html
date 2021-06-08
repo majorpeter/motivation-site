@@ -1,5 +1,6 @@
 <dialog id="journal-edit-dialog" class="mdl-dialog" style="min-width: 60%">
-    <h4 class="mdl-dialog__title">{{ _('Journaling for Today') }}</h4>
+    <h4 class="mdl-dialog__title today">{{ _('Journaling for Today') }}</h4>
+    <h4 class="mdl-dialog__title history">{{ _('Journaling for an earlier day') }} (<span class="date">?</span>)</h4>
     <div class="mdl-dialog__content">
         <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
             <textarea class="mdl-textfield__input" rows="8" id="journal-edit-text"></textarea>
@@ -19,8 +20,16 @@ function update_journal_box(update = false) {
   });
 }
 
-function open_journal_editor() {
-  $.get('{{ url_for('journal_data_get_set') }}', function(data) {
+function open_journal_editor(days_before) {
+  data = (days_before === undefined) ? {} : {days_before: days_before};
+  $.get('{{ url_for('journal_data_get_set') }}', data, function(data) {
+    if (days_before === undefined) {
+      $(journal_edit_dialog).removeClass('history');
+    } else {
+      $(journal_edit_dialog).addClass('history');
+      $(journal_edit_dialog).find('h4.history > span.date').text(data['day']);
+      $(journal_edit_dialog).data('days_before', days_before);
+    }
     var field = journal_edit_dialog.querySelector('#journal-edit-text');
     field.readOnly = false;
     field.value = data.entries.join('\n');
@@ -39,11 +48,17 @@ journal_edit_dialog.querySelector('.close-btn').addEventListener('click', functi
 });
 journal_edit_dialog.querySelector('.save-btn').addEventListener('click', function() {
   var field = journal_edit_dialog.querySelector('#journal-edit-text');
+
+  // lock UI while saving
   field.readOnly = true;
   $(journal_edit_dialog).addClass('saving');
-  $.post('{{ url_for('journal_data_get_set') }}', {
-    entries: field.value.split('\n'),
-  }, function(data) {
+
+  data = {entries: field.value.split('\n')};
+  if ($(journal_edit_dialog).hasClass('history')) {
+    data['days_before'] = $(journal_edit_dialog).data('days_before');
+  }
+
+  $.post('{{ url_for('journal_data_get_set') }}', data , function(data) {
     journal_edit_dialog.close();
     update_journal_box();
   });

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-20 23:11+0200\n"
+"POT-Creation-Date: 2021-06-08 08:18+0200\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
@@ -133,7 +133,7 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:44 templates/journaling.html:3
+#: main.py:44 templates/journaling.html:4
 msgid "Journal"
 msgstr "Napló"
 
@@ -220,11 +220,11 @@ msgstr "Naptár megnyitása"
 msgid "No upcoming events!"
 msgstr "Nincsenek közelgő események!"
 
-#: templates/journaling.html:11
+#: templates/journaling.html:21
 msgid "No journal entries found for Today!"
 msgstr "Nincsenek napló bejegyzések a mai napra!"
 
-#: templates/journaling.html:17
+#: templates/journaling.html:27
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -232,15 +232,19 @@ msgstr "Szerkesztés"
 msgid "Journaling for Today"
 msgstr "Mai Napló"
 
-#: templates/journaling_static.html:6
+#: templates/journaling_static.html:3
+msgid "Journaling for an earlier day"
+msgstr "Napló egy korábbi napra"
+
+#: templates/journaling_static.html:7
 msgid "Journal entries..."
 msgstr "Napló bejegyzések..."
 
-#: templates/journaling_static.html:10
+#: templates/journaling_static.html:12
 msgid "Save"
 msgstr "Mentés"
 
-#: templates/journaling_static.html:11
+#: templates/journaling_static.html:13
 msgid "Cancel"
 msgstr "Mégse"
 

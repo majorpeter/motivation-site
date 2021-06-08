@@ -253,6 +253,18 @@ dialog#journal-edit-dialog div.mdl-progress {
     width: 100%;
 }
 
+dialog#journal-edit-dialog h4.history {
+    display: none;
+}
+
+dialog#journal-edit-dialog.history h4.today {
+    display: none;
+}
+
+dialog#journal-edit-dialog.history h4.history {
+    display: block;
+}
+
 dialog#journal-edit-dialog.saving div.mdl-progress {
     display: block;
 }

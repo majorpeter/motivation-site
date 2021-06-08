@@ -106,8 +106,11 @@ def tasks_open_closed_timeline():
 @app.route('/journal-data', methods=['GET', 'POST'])
 def journal_data_get_set():
     if request.method == 'POST':
-        _journaling.entries_for_today = request.form.getlist('entries[]')
-    return _journaling.get_journal_data()
+        days_before = int(request.form.get('days_before')) if 'days_before' in request.form else None
+        _journaling.set_journal_data(entries=request.form.getlist('entries[]'), days_before=days_before)
+
+    days_before = int(request.args['days_before']) if 'days_before' in request.args else None
+    return _journaling.get_journal_data(days_before=days_before)
 
 
 @app.route('/journal')

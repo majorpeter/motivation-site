@@ -5,7 +5,8 @@
         </h2>
         <p class="days">
             {% for day in days %}
-            <button class="mdl-button mdl-button--icon" title="{{ day['day'] }}" style="color: {{ day['color'] }};">
+            <button class="mdl-button mdl-button--icon" title="{{ day['day'] }}" style="color: {{ day['color'] }};"
+                    onclick="open_journal_editor('{{ day['days_before'] }}');">
                 {{ day['count'] }}
             </button>
             {% endfor %}
