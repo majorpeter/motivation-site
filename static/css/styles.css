@@ -243,6 +243,11 @@ table#workout-cal td.today {
     color: rgba(0,0,0,.54);
 }
 
+div#journaling p.days {
+    text-align: right;
+    font-size: 1.2em;
+}
+
 dialog#journal-edit-dialog div.mdl-progress {
     display: none;
     width: 100%;

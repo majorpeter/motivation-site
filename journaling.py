@@ -1,5 +1,5 @@
 import io
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 import easywebdav2
 from flask import render_template
@@ -96,12 +96,29 @@ class Journaling:
             self._fetch_journal()
         return render_template('journaling.html', **self.get_journal_data())
 
+    @staticmethod
+    def color_for_count(count: int) -> str:
+        if count >= Journaling.REQUIRED:
+            return '#7ed67e'
+        elif count > 0:
+            return '#fb962c'
+        return '#ff4242'
+
     def get_journal_data(self):
         entries = self.entries_for_today
         done_percent = int(len(entries) / Journaling.REQUIRED * 100)
-        color = '#ff4242'
-        if len(entries) >= Journaling.REQUIRED:
-            color = '#7ed67e'
-        elif len(entries) > 0:
-            color = '#fb962c'
-        return {'entries': entries, 'done_percent': done_percent, 'color': color}
+        days = []
+        for i in range(7, 0, -1):
+            day = date.today() - timedelta(days=i)
+            entries_count = len(self.get_entries_for_day(day, strip_listing=True))
+            days.append({
+                'day': day.strftime(self._config['date_format']),
+                'count': entries_count,
+                'color': Journaling.color_for_count(entries_count)
+            })
+        return {
+            'entries': entries,
+            'done_percent': done_percent,
+            'color': Journaling.color_for_count(len(entries)),
+            'days': days
+        }
