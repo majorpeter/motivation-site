@@ -160,7 +160,6 @@ class Tasks:
         self._config = config
         self._redmine = redminelib.Redmine(config['url'], key=config['api_key'])
         self._cached_data = Tasks.CachedData(config)
-        self._cached_data.update()  # update at init (may take long)
 
     def render_random_closed_task(self):
         issue = self._cached_data.get_random_closed_issue()
@@ -184,6 +183,10 @@ class Tasks:
             'issues_in_progress': self._cached_data.issues_in_progress,
             'all_issues_url': self._config['url'] + 'issues',
             'all_projects_url': self._config['url'] + 'projects',
+
+            # to be filled by funcions below
+            'states_names': [], 'states_counts': [], 'states_urls': [], 'states_backgrounds': [],
+            'states_message': ''
         }
         vars.update(self.get_chart_states_data(use_cached=True))
         if 'contributions_and_timeline' in self._config and self._config['contributions_and_timeline']:
