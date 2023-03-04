@@ -8,6 +8,7 @@ import quotes
 from agenda import Agenda
 from journaling import Journaling
 from tasks import Tasks
+from todos import Todos
 from user import get_user_content_right
 from workout import Workout
 
@@ -30,6 +31,7 @@ with app.app_context():  # this is required to have translations in loading func
     if 'redmine' in config:
         config['redmine']['date_format'] = config['date_format']  # copy from global
         _tasks = Tasks(config['redmine'])
+    _todos = Todos(config['journaling'])  # TODO config
 
 
 @app.route('/')
@@ -49,6 +51,7 @@ def index_page():
     content_right += _agenda.render_agenda_cached()
     navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
 
+    content_left += _todos.render_layout()
     if _workout is not None:
         content_left += _workout.render_layout()
         navigation.append(NavigationItem('workout-chart', gettext('Workout Chart'), 'show_chart'))
