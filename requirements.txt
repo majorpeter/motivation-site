@@ -9,7 +9,7 @@ itsdangerous==2.0.1
 pyyaml==5.1.2
 pytest==5.3.1
 python-redmine==2.2.1
-Werkzeug==2.0.2
+Werkzeug==2.2.3
 caldav==1.1.1
 icalendar==5.0.4
 lxml==4.9.2
