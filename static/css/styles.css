@@ -248,6 +248,10 @@ div#journaling p.days {
     font-size: 1.2em;
 }
 
+div#todolist > div.mdl-layout {
+    max-height: 300px;
+}
+
 dialog#journal-edit-dialog div.mdl-progress {
     display: none;
     width: 100%;

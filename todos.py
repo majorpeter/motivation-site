@@ -1,8 +1,10 @@
 from collections import namedtuple
 from datetime import datetime, timezone
+from threading import Lock
 
 import caldav
 import re
+import time
 
 from flask import render_template
 
@@ -43,20 +45,39 @@ class Todos:
 
     def __init__(self, config):
         self._todos = []
+        self._update_lock = Lock()
+        self._fetch_time = None
 
         # set up the connection to the Nextcloud server
         url = config['dav']['protocol'] + '://' + config['dav']['hostname'] + '/remote.php/dav/calendars/' + config['dav']['login']
         client = caldav.DAVClient(url, username=config['dav']['login'], password=config['dav']['password'])
         self._calendar = client.calendar(url=url+'/personal/')
 
-        self.update()  # TODO
-
-    def update(self):
+    def _update(self):
         todos = []
         for task in self._calendar.todos():
             todos.append(Todos.Item.from_vobject(task))
         todos = sorted(todos, key=lambda x: x.sort_order)
         self._todos = todos
+        self._fetch_time = time.localtime()
+
+    def is_cache_up_to_date(self, max_age=600):
+        if self._fetch_time is None:
+            return False
+        if time.mktime(time.localtime()) - time.mktime(self._fetch_time) > max_age:
+            return False
+        return True
+
+    def _get_or_update(self):
+        with self._update_lock:
+            if self.is_cache_up_to_date():
+                return self._todos
+
+            self._update()
+            return self._todos
 
     def render_layout(self):
-        return render_template('todos.html', todos=self._todos)
+        return render_template('todos.html', todos=self._todos, need_update=not self.is_cache_up_to_date())
+
+    def render_content(self):
+        return render_template('todos_content.html', todos=self._get_or_update())

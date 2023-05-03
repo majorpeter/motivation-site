@@ -121,4 +121,9 @@ def journal_box():
     return _journaling.render_journal(update_from_server=request.args.get('update') == 'true')
 
 
+@app.route('/todos')
+def todos():
+    return _todos.render_content()
+
+
 app.run(host='0.0.0.0', debug=True, use_reloader=False)
