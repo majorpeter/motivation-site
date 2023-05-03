@@ -44,6 +44,8 @@ class Todos:
             return Todos.Item(summary, description, sort_order, due)
 
     def __init__(self, config):
+        CALENDAR_NAME = 'personal'
+
         self._todos = []
         self._update_lock = Lock()
         self._fetch_time = None
@@ -51,7 +53,9 @@ class Todos:
         # set up the connection to the Nextcloud server
         url = config['dav']['protocol'] + '://' + config['dav']['hostname'] + '/remote.php/dav/calendars/' + config['dav']['login']
         client = caldav.DAVClient(url, username=config['dav']['login'], password=config['dav']['password'])
-        self._calendar = client.calendar(url=url+'/personal/')
+        self._calendar = client.calendar(url=url+'/' + CALENDAR_NAME + '/')
+
+        self._edit_url = config['dav']['protocol'] + '://' + config['dav']['hostname'] + '/index.php/apps/tasks/#/calendars/' + CALENDAR_NAME
 
     def _update(self):
         todos = []
@@ -77,7 +81,7 @@ class Todos:
             return self._todos
 
     def render_layout(self):
-        return render_template('todos.html', todos=self._todos, need_update=not self.is_cache_up_to_date())
+        return render_template('todos.html', todos=self._todos, edit_url=self._edit_url, need_update=not self.is_cache_up_to_date())
 
     def render_content(self):
         return render_template('todos_content.html', todos=self._get_or_update())
