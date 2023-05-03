@@ -4,17 +4,22 @@ from datetime import datetime, timezone
 import caldav
 import re
 
+from flask import render_template
+
 
 class Todos:
-    class Item(namedtuple('Item', ['summary', 'sort_order'])):
+    class Item(namedtuple('Item', ['summary', 'description', 'sort_order', 'due'])):
         @staticmethod
         def format_content(s: str) -> str:
-            return re.sub(r'^<([A-Z-]+\{})', '', re.sub(r'>$', '', s))
+            return re.sub(r'^<([A-Z-]+\{.*})', '', re.sub(r'>$', '', s))
 
         @staticmethod
         def from_vobject(task: caldav.Todo):
             summary = None
+            description = None
             sort_order = None
+            due = None
+
             for child in task.vobject_instance.getChildren():
                 if child.name == 'VTODO':
                     if 'x-apple-sort-order' in child.contents:
@@ -29,8 +34,12 @@ class Todos:
                             sort_order = int((created - datetime(2001, 1, 1, 0, 0, 0, tzinfo=timezone.utc)).total_seconds())
 
                     summary = Todos.Item.format_content(str(child.summary))
+                    if 'description' in child.contents:
+                        description = Todos.Item.format_content(str(child.description))
+                    if 'due' in child.contents:
+                        due = Todos.Item.format_content(str(child.due))
 
-            return Todos.Item(summary, sort_order)
+            return Todos.Item(summary, description, sort_order, due)
 
     def __init__(self, config):
         self._todos = []
@@ -46,11 +55,8 @@ class Todos:
         todos = []
         for task in self._calendar.todos():
             todos.append(Todos.Item.from_vobject(task))
-        todos = sorted(todos, key=lambda x : x.sort_order)
+        todos = sorted(todos, key=lambda x: x.sort_order)
         self._todos = todos
 
     def render_layout(self):
-        result = ''
-        for i in self._todos:
-            result += '<li>' + i.summary + '</li>'
-        return result
+        return render_template('todos.html', todos=self._todos)
