@@ -8,9 +8,10 @@ function periodicallyReload(e) {
 }
 
 $(document).ready(function() {
-    $('div.lazy-load').each(function(i, e) {
+    $('div.lazy-load, div.lazy-load-periodic').each(function(i, e) {
         $.get($(e).data('url'), function(data) {
             $(e).html(data);
+            $(e).removeClass('lazy-load');
         });
         if ($(e).data('period')) {
             setInterval(function() {

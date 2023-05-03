@@ -159,6 +159,17 @@ div#content-left > div:last-child, div#content-right > div:last-child {
     margin-bottom: 0;
 }
 
+div.lazy-load {
+    animation: lazy-load-blinker 2s linear infinite;
+    opacity: 60%;
+}
+
+@keyframes lazy-load-blinker {
+  50% {
+    opacity: 15%;
+  }
+}
+
 #agenda div.item {
     margin: 0 0 2em 0;
     clear: both;
