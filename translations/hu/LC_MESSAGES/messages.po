@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-06-08 08:18+0200\n"
+"POT-Creation-Date: 2023-05-03 22:49+0200\n"
 "PO-Revision-Date: 2020-02-15 23:43+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: hu\n"
 "Language-Team: hu <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.11.0\n"
 
 #: agenda.py:15
 msgid "Monday"
@@ -133,27 +133,27 @@ msgstr "Következő hónap (%s)"
 msgid "Later"
 msgstr "Később"
 
-#: main.py:44 templates/journaling.html:4
+#: main.py:46 templates/journaling.html:4
 msgid "Journal"
 msgstr "Napló"
 
-#: main.py:47
+#: main.py:49
 msgid "Quote of the day"
 msgstr "Napi idézet"
 
-#: main.py:50 templates/agenda.html:3
+#: main.py:52 templates/agenda.html:3
 msgid "Agenda"
 msgstr "Események"
 
-#: main.py:54 templates/workout.html:4
+#: main.py:57 templates/workout.html:4
 msgid "Workout Chart"
 msgstr "Edzés Grafikon"
 
-#: main.py:58 templates/tasks.html:14
+#: main.py:61 templates/tasks.html:14
 msgid "Tasks Open/Closed"
 msgstr "Nyitott/befejezett feladatok"
 
-#: main.py:61
+#: main.py:64
 msgid "Motivational Site"
 msgstr "Motivációs Oldal"
 
@@ -168,7 +168,7 @@ msgstr[1] "{num} napja"
 msgid "%s issues are closed."
 msgstr "%s lezárt feladat."
 
-#: tasks.py:169
+#: tasks.py:168
 msgid "No closed issues found"
 msgstr "Nem található lezárt feladat"
 
@@ -224,7 +224,7 @@ msgstr "Nincsenek közelgő események!"
 msgid "No journal entries found for Today!"
 msgstr "Nincsenek napló bejegyzések a mai napra!"
 
-#: templates/journaling.html:27
+#: templates/journaling.html:27 templates/todos.html:13
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -306,6 +306,14 @@ msgstr "Lezárt feladatok"
 #: templates/tasks_open_closed_timeline.html:24
 msgid "Total Issues"
 msgstr "Összes feladat"
+
+#: templates/todos.html:3
+msgid "Todos"
+msgstr "Teendők"
+
+#: templates/todos_content.html:15
+msgid "No todos found."
+msgstr "Nem találhatók teendők."
 
 #: templates/workout.html:18
 msgid "Open Spreadsheet"
