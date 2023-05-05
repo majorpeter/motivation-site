@@ -31,7 +31,9 @@ with app.app_context():  # this is required to have translations in loading func
     if 'redmine' in config:
         config['redmine']['date_format'] = config['date_format']  # copy from global
         _tasks = Tasks(config['redmine'])
-    _todos = Todos(config['journaling'])  # TODO config
+    _todos = None
+    if 'todos' in config:
+        _todos = Todos(config['todos'])
 
 
 @app.route('/')
@@ -51,7 +53,8 @@ def index_page():
     content_right += _agenda.render_agenda_cached()
     navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
 
-    content_left += _todos.render_layout()
+    if _todos is not None:
+        content_left += _todos.render_layout()
     if _workout is not None:
         content_left += _workout.render_layout()
         navigation.append(NavigationItem('workout-chart', gettext('Workout Chart'), 'show_chart'))

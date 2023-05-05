@@ -29,3 +29,10 @@ journaling:
     path: 'location-of-my-journal.md'
   day_prefix: '### '
   date_format: '%Y.%m.%d.'
+
+todos:
+  hostname: 'example.com'
+  protocol: 'https'
+  login: 'username'
+  password: 'password'
+  calendar_name: 'personal'
