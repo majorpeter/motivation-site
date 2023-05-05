@@ -5,7 +5,11 @@
         {% for i in todos %}
         <tr>
             <td class="mdl-data-table__cell--non-numeric">{{ i.summary }}</td>
-            <td>{% if i.due %}{{ i.due }}{% endif %}</td>
+            <td>{% if i.due %}
+                {% if i.past_due %}<span style="color: red">{% endif %}
+                    {{ i.due_string }}
+                {% if i.past_due %}</span>{% endif %}
+                {% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

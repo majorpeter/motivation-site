@@ -39,9 +39,21 @@ class Todos:
                     if 'description' in child.contents:
                         description = Todos.Item.format_content(str(child.description))
                     if 'due' in child.contents:
-                        due = Todos.Item.format_content(str(child.due))
+                        due = datetime.fromisoformat(Todos.Item.format_content(str(child.due)))
 
             return Todos.Item(summary, description, sort_order, due)
+
+        @property
+        def past_due(self):
+            return self.due is not None and self.due.timestamp() < time.time()
+
+        @property
+        def due_string(self):
+            if not self.due:
+                return ''
+            if self.due.hour == 0 and self.due.minute == 0:
+                return self.due.strftime('%Y-%m-%d')  #TODO config
+            return self.due.strftime('%Y-%m-%d %H:%M')
 
     def __init__(self, config):
         self._todos = []
