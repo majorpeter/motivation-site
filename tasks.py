@@ -54,10 +54,8 @@ class Tasks:
                 issues = self._redmine.issue.all(sort='id:asc', include=['journals'])
                 for issue in issues:
                     creation_dates.append(issue.created_on.date())
-                    try:
+                    if issue.closed_on is not None:
                         close_dates.append(issue.closed_on.date())
-                    except ResourceAttrError:
-                        pass  # not closed yet
 
                     for journal in issue.journals:
                         journal_dates.append(journal.created_on.date())
