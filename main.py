@@ -6,6 +6,7 @@ from flask_babel import Babel, gettext
 
 import quotes
 from agenda import Agenda
+from audio import Audio
 from journaling import Journaling
 from tasks import Tasks
 from todos import Todos
@@ -34,6 +35,9 @@ with app.app_context():  # this is required to have translations in loading func
     _todos = None
     if 'todos' in config:
         _todos = Todos(config['todos'])
+    _audio = None
+    if 'audio' in config:
+        _audio = Audio(config['audio'])
 
 
 @app.route('/')
@@ -42,6 +46,9 @@ def index_page():
     content_right = ''
     navigation = []
 
+    content_right += _agenda.render_agenda_cached()
+    navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
+
     content_right += get_user_content_right()
 
     content_right += _journaling.render_journal() + render_template('journaling_static.html')
@@ -49,9 +56,6 @@ def index_page():
 
     content_right += quotes.quote()
     navigation.append(NavigationItem('quote-of-the-day', gettext('Quote of the day'), 'message'))
-
-    content_right += _agenda.render_agenda_cached()
-    navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
 
     if _todos is not None:
         content_left += _todos.render_layout()
@@ -62,6 +66,9 @@ def index_page():
     if _tasks is not None:
         content_left += _tasks.render_layout()
         navigation.append(NavigationItem(Tasks.OPEN_CLOSED_ID, gettext('Tasks Open/Closed'), 'playlist_add_check'))
+
+    if _audio is not None:
+        content_right += _audio.render_layout()
 
     return render_template('index.html',
                            title=config['title'] if 'title' in config else gettext('Motivational Site'),

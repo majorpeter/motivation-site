@@ -36,3 +36,7 @@ todos:
   login: 'username'
   password: 'password'
   calendar_name: 'personal'
+
+audio:
+  src: https://example.com/music.mp3
+  autoplay: true
