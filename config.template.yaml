@@ -40,3 +40,9 @@ todos:
 audio:
   src: https://example.com/music.mp3
   autoplay: true
+
+# from https://weatherwidget.io/ config
+weather:
+  location: '40d78n73d97/manhattan'
+  label: NYC
+  lang: 'en'

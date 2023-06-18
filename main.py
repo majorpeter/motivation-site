@@ -11,6 +11,7 @@ from journaling import Journaling
 from tasks import Tasks
 from todos import Todos
 from user import get_user_content_right
+from weatherwidget import WeatherWidget
 from workout import Workout
 
 NavigationItem = namedtuple('NavigationItem', 'id title icon')
@@ -38,6 +39,9 @@ with app.app_context():  # this is required to have translations in loading func
     _audio = None
     if 'audio' in config:
         _audio = Audio(config['audio'])
+    _weather = None
+    if 'weather' in config:
+        _weather = WeatherWidget(config['weather'])
 
 
 @app.route('/')
@@ -45,6 +49,9 @@ def index_page():
     content_left = ''
     content_right = ''
     navigation = []
+
+    if _weather:
+        content_right += _weather.render_layout()
 
     content_right += _agenda.render_agenda_cached()
     navigation.append(NavigationItem('agenda', gettext('Agenda'), 'calendar_today'))
