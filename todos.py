@@ -10,7 +10,7 @@ from flask import render_template
 
 
 class Todos:
-    class Item(namedtuple('Item', ['summary', 'description', 'sort_order', 'due'])):
+    class Item(namedtuple('Item', ['summary', 'description', 'priority', 'sort_order', 'due'])):
         @staticmethod
         def format_content(s: str) -> str:
             return re.sub(r'^<([A-Z-]+\{.*})', '', re.sub(r'>$', '', s))
@@ -19,6 +19,7 @@ class Todos:
         def from_vobject(task: caldav.Todo):
             summary = None
             description = None
+            priority = None
             sort_order = None
             due = None
 
@@ -33,15 +34,19 @@ class Todos:
                             sort_order = 0
                         else:
                             created = datetime.fromisoformat(Todos.Item.format_content(str(child.contents['created'][0])))
-                            sort_order = int((created - datetime(2001, 1, 1, 0, 0, 0, tzinfo=timezone.utc)).total_seconds())
+                            sort_order = int((created.astimezone(timezone.utc) - datetime(2001, 1, 1, 0, 0, 0, tzinfo=timezone.utc)).total_seconds())
 
                     summary = Todos.Item.format_content(str(child.summary))
                     if 'description' in child.contents:
                         description = Todos.Item.format_content(str(child.description))
                     if 'due' in child.contents:
                         due = datetime.fromisoformat(Todos.Item.format_content(str(child.due)))
+                    if 'priority' in child.contents:
+                        priority = int(Todos.Item.format_content(str(child.contents['priority'][0])))
+                    else:
+                        priority = 10
 
-            return Todos.Item(summary, description, sort_order, due)
+            return Todos.Item(summary, description, priority, sort_order, due)
 
         @property
         def past_due(self):
@@ -68,10 +73,19 @@ class Todos:
         self._edit_url = config['protocol'] + '://' + config['hostname'] + '/index.php/apps/tasks/#/calendars/' + config['calendar_name']
 
     def _update(self):
+        def _sort_function(x: Todos.Item) -> str:
+            """
+            sort by due date first (if present)
+            otherwise sort by priority and then by summary
+            """
+            if x.due:
+                return x.due_string
+            return ('%x' % x.priority) + x.summary
+
         todos = []
         for task in self._calendar.todos():
             todos.append(Todos.Item.from_vobject(task))
-        todos = sorted(todos, key=lambda x: x.sort_order)
+        todos = sorted(todos, key=_sort_function)
         self._todos = todos
         self._fetch_time = time.localtime()
 
